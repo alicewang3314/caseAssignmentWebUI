@@ -1,0 +1,57 @@
+<form [formGroup]="staffSearchForm">
+  <div class="row col-12" style="margin-top: 20px;">
+    <div class="col-4">
+      <label style="color: white">Location: Mechanicsburg</label>
+    </div>
+    <div class="col-4">
+      <label style="color: white">Staff Type: Counselor</label>
+    </div>
+    <div class="col-4">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Job Class</mat-label>
+
+        <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl"
+          [matAutocomplete]="autoLocationSelection" [multiple]=true [disabled]=true>
+
+        <mat-autocomplete #autoLocationSelection="matAutocomplete" (optionSelected)="onStaffChange($event)">
+          <mat-option *ngFor="let option of options" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+
+      </mat-form-field>
+    </div>
+
+    <div class="col-4">
+      <mat-form-field class="example-full-width">
+        <mat-label>Last Name</mat-label>
+        <input matInput [formControl]="myControl" [(ngModel)]="LastNameValue" (blur)="openEmployeeSearchDialog()">
+      </mat-form-field>
+    </div>
+
+    <div class="col-4">
+      <mat-form-field class="example-full-width">
+        <mat-label>First Name</mat-label>
+        <input matInput [formControl]="myControl" [(ngModel)]="FirstNameValue">
+      </mat-form-field>
+    </div>
+
+  </div>
+
+
+  <div class="col-12">
+    <double-direction-select [leftColumnName]="leftColumnName" [rightColumnName]="rightColumnName"
+      [leftColumn]="leftColumnVal" [rightColumn]="rightColumnVal"
+      (valueChange)="getNewValue($event)"></double-direction-select>
+  </div>
+
+  <div class="example-button-container float-start" style="margin-top: 20px;">
+    <button mat-raised-button color="basic" style="background-color:beige"
+      routerLink="/viewStaffAssignment">Cancel</button>
+  </div>
+  <div class="example-button-container float-end" style="margin-top: 20px;" *ngIf="newToRightEx1.length>0">
+    <button mat-raised-button color="primary" style="background-color:rgba(248,151,29,.77)"
+      routerLink="/viewStaffAssignment">Manage Staff(s)</button>
+  </div>
+
+</form>

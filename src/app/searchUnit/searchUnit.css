@@ -1,0 +1,7 @@
+.mat-mdc-slide-toggle.mat-mdc-checked:not(.mat-disabled) .mat-mdc-slide-toggle-bar {
+    color: rgba(241, 243, 244, 0.854);
+}
+
+.mat-mdc-slide-toggle.mat-mdc-checked:not(.mat-disabled) .mat-mdc-slide-toggle-thumb {
+    color: rgba(241, 243, 244, 0.854);
+}

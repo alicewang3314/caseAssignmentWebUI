@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Edit Unit</h1>
+<div mat-dialog-content>
+  <div class="col-4">
+    <mat-form-field class="example-full-width">
+      <mat-label>Unit Name</mat-label>
+      <input matInput [formControl]="textFormControl" [errorStateMatcher]="matcher" [(ngModel)]="unitNameValue">
+      <mat-error *ngIf="textFormControl.hasError('required')">
+        Text is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <div class="col-6" align="staff">
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Cancel</button>
+  </div>
+  <div class="col-6" align="end">
+    <button mat-button mat-dialog-close>Save Changes</button>
+  </div>
+</div>

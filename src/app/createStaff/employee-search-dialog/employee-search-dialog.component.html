@@ -1,0 +1,78 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left" id="myModalLabel">
+        <span>Staff Search Results </span>
+    </h4>
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close>X</button>
+    </div>
+
+</div>
+
+
+<mat-divider></mat-divider>
+
+<div style="height:73%" mat-dialog-content>
+
+    <div *ngFor="let employee of employeePagedList">
+        <div class="col-xs-12 col-md-4">
+            <div class="card card-search-results">
+                <div class="front">
+                    <div class="content-panel">
+                        <div class="tile-header">
+                            <div class="row ellipsis-tile-tooltip">
+                                <div class="col-xs-8 tile-ellipsis-header">
+                                    <h4>{{employee.name}}</h4>
+                                </div>
+                                <div class="col-xs-4 pull-right inactive-headline">
+                                    <h4>{{employee.status}}</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tile-body search-results">
+                            <div class="row">
+                                <div class="col-xs-5">
+                                    <img src="{{pbppImageSrc}}" *ngIf="employee.agency == 'PBPP'" alt="img" />
+                                    <img src="{{docImageSrc}}" *ngIf="employee.agency == 'DOC'" alt="img1" />
+                                </div>
+                                <div class="col-xs-7 pull-right">
+                                    <div class="tile-info ellipsis-tile-tooltip">
+                                        <div>
+                                            <label>Agency : </label>
+                                            <span>{{employee.agency}}</span>
+                                        </div>
+                                        <div class="text-ellipsis" tooltip-enable="false" tooltip-placement="top"
+                                            show-tooltip="">
+                                            <label>Location : </label>
+                                            <span>{{employee.location}}</span>
+                                        </div>
+                                        <div class="text-ellipsis" tooltip-enable="false" tooltip-placement="top"
+                                            show-tooltip="">
+                                            <label>Classification : </label>
+                                            <span class="tile-ellipsis-data">{{employee.classification}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tile-footer btn-icons">
+                            <div class="clearfix btn-hide">
+                                <div class="col-xs-12 ">
+                                    <a class="btn-footer" style="color: #fff;"> Select</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+    (page)="OnPageChange($event)">
+</mat-paginator>
+<mat-divider></mat-divider>
+<div style="height:5%" mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+</div>

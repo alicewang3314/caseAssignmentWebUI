@@ -1,0 +1,59 @@
+<mat-toolbar-row>
+  <h2 style="color: rgba(248,151,29,.77)">Edit Unit</h2>
+</mat-toolbar-row>
+<form class="createUnit">
+  <div class="row col-12">
+    <div class="col-4">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Location / Office Types</mat-label>
+        <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl"
+          [matAutocomplete]="autoTypes" [multiple]=true [disabled]=true>
+        <mat-autocomplete #autoTypes="matAutocomplete">
+          <mat-option *ngFor="let option of optionsType" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+
+      </mat-form-field>
+    </div>
+    <div class="col-4">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Location / Office</mat-label>
+        <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl"
+          [matAutocomplete]="auto" [multiple]=true [disabled]=true>
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of options" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+
+      </mat-form-field>
+    </div>
+    <div class="col-4">
+      <mat-form-field class="example-full-width">
+        <mat-label>Unit Name</mat-label>
+        <input matInput [formControl]="textFormControl" [errorStateMatcher]="matcher" [(ngModel)]="unitNameValue">
+        <mat-error *ngIf="textFormControl.hasError('required')">
+          Text is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+  </div>
+
+  <div class="example-button-container float-start" style="margin-top: 20px;">
+    <button mat-raised-button color="basic" style="background-color:beige" routerLink="/searchUnit">Cancel</button>
+  </div>
+  <div class="example-button-container float-end" style="margin: 20px;">
+    <button mat-raised-button color="primary" style="background-color:rgba(248,151,29,.77)"
+      routerLink="/searchUnit">Save Changes</button>
+  </div>
+  <div class="example-button-container float-end" style="margin: 20px; ">
+    <button mat-raised-button color="primary" style="background-color:rgba(248,151,29,.77)"
+      routerLink="/searchUnit">Reactivate Unit</button>
+  </div>
+  <div class="example-button-container float-end" style="margin: 20px;">
+    <button mat-raised-button color="primary" style="background-color:rgba(248,151,29,.77)"
+      routerLink="/searchUnit">Deactivate Unit</button>
+  </div>
+</form>

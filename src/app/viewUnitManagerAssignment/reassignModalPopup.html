@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Reassign Staff</h1>
+<div mat-dialog-content>
+  <div class="col-4">
+    <mat-form-field class="example-full-width" appearance="fill" style="width: 300px;">
+      <mat-label>Staff Name</mat-label>
+      <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl"
+        [matAutocomplete]="autoStaffNameSelection" [multiple]=true [disabled]=true>
+      <mat-autocomplete #autoStaffNameSelection="matAutocomplete">
+        <mat-option *ngFor="let option of staffNameOptions" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <div class="col-6" align="staff">
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Cancel</button>
+  </div>
+  <div class="col-6" align="end">
+    <button mat-button mat-dialog-close>Reassign</button>
+  </div>
+</div>

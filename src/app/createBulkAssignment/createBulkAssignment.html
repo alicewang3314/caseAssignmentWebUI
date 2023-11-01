@@ -1,0 +1,141 @@
+<mat-toolbar-row>
+    <h2 style="color: rgba(248,151,29,.77)">Bulk Reassignment</h2>
+</mat-toolbar-row>
+
+<form class="viewStaffAssignment">
+    <div class="row col-12">
+
+        <div class="col-4">
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Location / Office</mat-label>
+                <!-- #docregion input -->
+                <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl"
+                    [matAutocomplete]="autoLocationSelection" [multiple]=true [disabled]=true>
+                <!-- #enddocregion input -->
+                <!-- #docregion mat-autocomplete -->
+                <mat-autocomplete #autoLocationSelection="matAutocomplete">
+                    <mat-option *ngFor="let option of options" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Unit</mat-label>
+                <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl"
+                    [matAutocomplete]="autoUnitSelection" [multiple]=true [disabled]=true>
+                <mat-autocomplete #autoUnitSelection="matAutocomplete">
+                    <mat-option *ngFor="let option of options" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Section</mat-label>
+                <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl"
+                    [matAutocomplete]="autoSectionSelection" [multiple]=true [disabled]=true>
+                <mat-autocomplete #autoSectionSelection="matAutocomplete">
+                    <mat-option *ngFor="let option of options" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Staff Type</mat-label>
+                <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl"
+                    [matAutocomplete]="autoStaffTypeSelection" [multiple]=true [disabled]=true>
+                <mat-autocomplete #autoStaffTypeSelection="matAutocomplete">
+                    <mat-option *ngFor="let option of staffTypeOptions" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field class="example-full-width" appearance="fill" style="width: 300px;">
+                <mat-label>Staff Name</mat-label>
+                <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl"
+                    [matAutocomplete]="autoStaffNameSelection" [multiple]=true [disabled]=true>
+                <mat-autocomplete #autoStaffNameSelection="matAutocomplete">
+                    <mat-option *ngFor="let option of staffNameOptions" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+
+            </mat-form-field>
+        </div>
+
+    </div>
+    <div class="col-4 float-end">
+        <div class="float-end">
+            <button mat-raised-button color="primary" style="background-color:rgba(248,151,29,.77)">Search</button>
+        </div>
+    </div>
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="margin-top: 40px;">
+        <ng-container matColumnDef="selectUnit">
+            <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox [color]="'primary'" (change)="$event ? toggleAllRows() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let element,index as i">
+                <mat-checkbox [color]="'primary'" #myCheckbox (click)="$event.stopPropagation()"
+                    [checked]="selection.isSelected(element)" (change)="selectUnit($event,$event.checked,i,element)">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="doc">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> DOC # </th>
+            <td mat-cell *matCellDef="let element"> {{element.doc}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="parole">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Parole # </th>
+            <td mat-cell *matCellDef="let element"> {{element.parole}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reentrantName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Reentrant Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="housingUnit">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Housing Unit </th>
+            <td mat-cell *matCellDef="let element"> {{element.housingUnit}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="unitManager">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Staff Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.unitManager}} </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+        </tr>
+    </table>
+
+    <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="length"
+        [pageSize]="pageSize" [disabled]="disabled" [showFirstLastButtons]="showFirstLastButtons"
+        [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize"
+        [pageIndex]="pageIndex" aria-label="Select page">
+    </mat-paginator>
+
+    <div class="col-4 float-end" *ngIf="enableStaffView" style="margin-top:20px">
+        <div class="float-end">
+            <button mat-raised-button color="primary" style="background-color:rgba(248,151,29,.77)"
+                (click)="addStaff()">ReAssign Staff</button>
+        </div>
+    </div>
+
+
+
+</form>

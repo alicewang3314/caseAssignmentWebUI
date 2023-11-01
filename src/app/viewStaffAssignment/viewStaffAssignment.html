@@ -1,0 +1,107 @@
+<mat-toolbar-row>
+  <h2 style="color: rgba(248,151,29,.77)">Manage Staff</h2>
+</mat-toolbar-row>
+
+<form class="viewStaffAssignment">
+  <div class="row col-12">
+    <div class="col-4">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Staff Type</mat-label>
+        <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl"
+          [matAutocomplete]="autoStaffTypeSelection" [multiple]=true [disabled]=true>
+        <mat-autocomplete #autoStaffTypeSelection="matAutocomplete">
+          <mat-option *ngFor="let option of staffTypeOptions" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+
+      </mat-form-field>
+    </div>
+    <div class="col-4">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Location / Office</mat-label>
+        <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl"
+          [matAutocomplete]="autoLocationSelection" [multiple]=true [disabled]=true>
+        <mat-autocomplete #autoLocationSelection="matAutocomplete">
+          <mat-option *ngFor="let option of options" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+
+      </mat-form-field>
+    </div>
+    <div class="col-4">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Unit</mat-label>
+        <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl"
+          [matAutocomplete]="autoUnitSelection" [multiple]=true [disabled]=true>
+        <mat-autocomplete #autoUnitSelection="matAutocomplete">
+          <mat-option *ngFor="let option of UnitOptions" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+
+      </mat-form-field>
+    </div>
+
+  </div>
+  <div class=" row example-button-container float-end" style="margin-top: 20px;">
+    <button mat-raised-button color="primary" style="background-color:rgba(248,151,29,.77)">Search</button>
+  </div>
+  <div class="col-12">
+    <div class="example-button-container float-end" style="margin-top: 50px; margin-right:-50px;">
+      <button mat-fab color="warn" style="background-color:rgba(248,151,29,.77)" routerLink="/createStaff">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div class="col-12" style="margin-top: 30px;">
+      <table mat-table [dataSource]="dataSourceStaff" matSort class="mat-elevation-z8">
+
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Staff Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="staffType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Staff Type </th>
+          <td mat-cell *matCellDef="let element"> {{element.staffType}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="createdDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Assigned On </th>
+          <td mat-cell *matCellDef="let element"> {{element.createdDate | date:'MM/dd/YYYY HH:mm:ss'}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="createdBy">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Assigned By </th>
+          <td mat-cell *matCellDef="let element"> {{element.createdBy}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="deleteStaff">
+          <th mat-header-cell *matHeaderCellDef> Remove </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="warn" aria-label="Delete" (click)="deleteStaff(element)">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsStaff"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsStaff;">
+        </tr>
+      </table>
+      <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="length"
+        [pageSize]="pageSize" [disabled]="disabled" [showFirstLastButtons]="showFirstLastButtons"
+        [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize"
+        [pageIndex]="pageIndex" aria-label="Select page">
+      </mat-paginator>
+    </div>
+  </div>
+
+</form>

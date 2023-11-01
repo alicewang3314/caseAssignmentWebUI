@@ -1,0 +1,52 @@
+<mat-toolbar-row>
+  <h2 style="color: rgba(248,151,29,.77)">Create Unit</h2>
+</mat-toolbar-row>
+<form class="createUnit">
+  <div class="row col-12">
+    <div class="col-4" style="margin-bottom:20px">
+      <label style="color: white">Location / Office : Camp Hill </label>
+    </div>
+    <div class="col-4">
+      <mat-form-field class="example-full-width">
+        <mat-label>Unit Name</mat-label>
+        <input matInput [formControl]="textFormControl" [errorStateMatcher]="matcher" [(ngModel)]="unitNameValue">
+        <mat-error *ngIf="textFormControl.hasError('required')">
+          Text is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <button mat-fab color="warn" aria-label="" style="margin-left:40px; background-color:rgba(248,151,29,.77)"
+      (click)="onAdd()" *ngIf="!textFormControl.hasError('required')">
+      <mat-icon>add circle</mat-icon>
+    </button>
+  </div>
+
+  <table mat-table [dataSource]="tableData" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Unit Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="deleteUnit">
+      <th mat-header-cell *matHeaderCellDef> Remove </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button color="warn" aria-label="Delete" (click)="removeUnit(element)">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+    </tr>
+  </table>
+  <div class="example-button-container float-start" style="margin-top: 20px;">
+    <button mat-raised-button color="basic" style="background-color:beige" routerLink="/searchUnit">Cancel</button>
+  </div>
+  <div class="example-button-container float-end" style="margin-top: 20px;">
+    <button mat-raised-button color="primary" style="background-color:rgba(248,151,29,.77)" routerLink="/searchUnit">Add
+      Unit</button>
+  </div>
+</form>

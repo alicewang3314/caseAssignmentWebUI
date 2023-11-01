@@ -1,0 +1,33 @@
+.header {
+  position: fixed;
+  top: 0;
+  width: 83%;
+  height: 65px;
+  left: 280px;
+
+  // background-color: rgba(241, 243, 244, 0.854);
+  background-color: rgba(0, 0, 0, .87);
+  color: white;
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  align-items: center;
+  padding-right: 15px;
+
+  &>* {
+    margin-left: 17px;
+
+    .mat-icon {
+      vertical-align: bottom;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    &:last-of-type {
+      margin-right: 15px;
+    }
+  }
+}
