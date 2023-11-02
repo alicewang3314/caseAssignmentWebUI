@@ -54,7 +54,7 @@ export class EmployeeSearchDialogComponent {
     this.employeePagedList = this.employeeList.slice(startIndex, endIndex);
   }
 
-  onResize(event) { //to adjust to screen size
+  onResize(event: any) { //to adjust to screen size
     this.breakpoint = (event.target.innerWidth <= 800) ? 1 : 3;
   }
 }

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
+import { FormControl, FormGroup, FormBuilder, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { Unit } from '../unit';
-import { FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import * as _ from 'lodash';
 import { StaffService } from '../staff.service';
@@ -29,9 +28,9 @@ export class CreateStaff {
   staffSearchForm: FormGroup;
   LastNameValue = '';
   FirstNameValue = '';
-  searchResult = [];
-  staffName = [];
-  staffList = [];
+  searchResult: any[] = [];
+  staffName: any[] = [];
+  staffList: any[] = [];
   dataSourceStaff: MatTableDataSource<Staff>;
   enableStaffView: boolean = false;
   enableStaffSearch: boolean = false;
@@ -100,13 +99,17 @@ export class CreateStaff {
   }
 
   onChanges() {
-    this.staffSearchForm.get('searchSection').valueChanges.pipe(
-      filter(data => data.trim().length >= 0),
+    const searchSection = this.staffSearchForm.get('searchSection');
+
+    if (!searchSection) return;
+
+    searchSection.valueChanges.pipe(
+      filter((data: string) => data.trim().length >= 0),
       debounceTime(500),
       switchMap((id: string) => {
         return id ? this.staffService.searchingValue(id.replace(/[\s]/g, '')) : of([]);
       })
-    ).subscribe(data => {
+    ).subscribe((data: any) => {
       this.searchResult = data as Array<{}>;
     })
   }
