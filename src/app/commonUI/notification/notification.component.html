@@ -1,0 +1,65 @@
+<div class="notification mat-elevation-z3" [class.opened]="isOpened">
+  <ng-container *ngIf="showNotifications">
+    <div class="notification_header">
+      <h3>Notifications</h3>
+    </div>
+    <div class="notification_clear-all">
+      <button *ngIf="!isConfirmClearAll" [disabled]="!hasNotifications" class="notification_clear-all-btn"
+        (click)="isConfirmClearAll = true" matTooltip="Clear all notifications">
+        <mat-icon color="primary">delete_sweep</mat-icon>
+      </button>
+      <button *ngIf="isConfirmClearAll" class="notification_clear-all-btn confirm" (click)="confirmClearAll()"
+        matTooltip="Clear all notifications" matTooltip="Confirm">
+        <mat-icon style="color: green">check</mat-icon>
+      </button>
+      <button *ngIf="isConfirmClearAll" class="notification_clear-all-btn cancel" (click)="isConfirmClearAll = false"
+        matTooltip="Clear all notifications" matTooltip="Cancel">
+        <mat-icon style="color: red">clear</mat-icon>
+      </button>
+    </div>
+    <div class="notification_filter">
+      <mat-form-field [autofocus]="true" appearance="outline" class="notification_filter-input">
+        <button class="notification_filter-search-btn" matPrefix mat-icon-button>
+          <mat-icon color="accent">search</mat-icon>
+        </button>
+        <input matInput type="text" [(ngModel)]="filterVal" (ngModelChange)="updateFilter()"
+          placeholder="Enter minimum 3 letters">
+        <button class="notification_filter-clear-btn" *ngIf="filterVal" matSuffix mat-icon-button
+          (click)="filterVal=''; updateFilter()">
+          <mat-icon color="accent">close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <mat-button-toggle-group class="notification_buttons" appearance="legacy" [(ngModel)]="timeFrame"
+      (ngModelChange)="onSelectedTimeFrameChange($event)">
+      <mat-button-toggle value="today" [checked]="true">Today</mat-button-toggle>
+      <mat-button-toggle value="all">All Notifications</mat-button-toggle>
+    </mat-button-toggle-group>
+    <div class="notification_content hide-scrollbar">
+      <mat-accordion class="notification_content-panel deep" multi *ngFor="let source of notificationSource">
+        <mat-expansion-panel *ngIf="filterNotificationBySource(source).length > 0">
+          <mat-expansion-panel-header class="notification_content-header">
+            <mat-panel-title>
+              {{source | uppercase}}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-list>
+            <mat-list-item class="notification_list-item" *ngFor="let item of filterNotificationBySource(source)"
+              (mouseenter)="openDetails(details,item)" (mouseleave)="closeDetails()" (touchstart)="handleTouchStart()"
+              (touchend)="handleTouchEnd()" #details>
+              <mat-icon matListItemIcon>description</mat-icon>
+              <span matListItemTitle>{{item.title}}</span>
+              <button class="notification_remove-btn" matToolTip="Delete" (click)="removeNotificationById(item.id)">
+                <mat-icon>close</mat-icon>
+              </button>
+              <span matListItemLine>Expires in {{getExpiresCountdown(item.expires)}} days</span>
+            </mat-list-item>
+          </mat-list>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <div *ngIf="notifications.length == 0" class="notification_empty">
+        <h3>No new notifications!</h3>
+      </div>
+    </div>
+  </ng-container>
+</div>

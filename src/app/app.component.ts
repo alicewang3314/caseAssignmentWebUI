@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CaptorThemeService } from 'src/app/commonUI/theme/captor-theme.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'caseAssignment';
+
+  constructor(private _theme: CaptorThemeService) {
+    this._theme.loadTheme();
+  }
 }

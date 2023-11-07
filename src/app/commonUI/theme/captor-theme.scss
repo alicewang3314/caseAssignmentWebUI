@@ -1,0 +1,178 @@
+@import './_base-theme.scss';
+@import './_styles.scss';
+
+* {
+  transition: background-color 0.4s ease-out;
+}
+
+/*------------- Light theme --------------*/
+/* Define light theme and override components in light mode */
+.captor-theme-light {
+
+  /* Notification bar */
+  .notification {
+    .notification_header {
+      color: $light-text-light;
+    }
+
+    .mat-expansion-panel-body {
+      background-color: $light-background-light;
+    }
+
+  }
+
+  /* Header */
+  .header {
+    background-color: $captor-accent-dark;
+    color: $light-text-light;
+  }
+
+  /* Footer */
+  .footer {
+    background-color: $light-background-accent-light;
+    color: $light-text-light;
+
+    .footer_back-btn:hover {
+      color: $light-text-light !important;
+    }
+  }
+
+  /* Navigation */
+  .nav {
+    &_background-line {
+      border-bottom: 2px solid $captor-accent-dark;
+    }
+
+    .nav_header {
+      color: $captor-accent-dark;
+    }
+
+    .captor_icon {
+      background-color: $light-background-accent-deep;
+    }
+
+    .nav_btn {
+      opacity: 1 !important;
+      color: $captor-accent-dark;
+
+      &:hover {
+        background-color: $light-background-accent-deep;
+        color: $light-text-light;
+
+        .mat-icon {
+          color: inherit;
+        }
+      }
+    }
+
+    .nav_submenu {
+      background-color: rgba(241, 243, 244, 0.854);
+
+      .nav_submenu-item {
+        &:not(:last-of-type) {
+          border-color: white !important;
+        }
+      }
+    }
+  }
+
+  /* Disclaimer */
+  .disclaimer {
+    .disclaimer-warning {
+      background-color: $light-background-light;
+      color: $light-text-accent-deep;
+    }
+  }
+}
+
+/*------------ Dark theme----------------*/
+/* Defind dark theme and override components in dark mode */
+.captor-theme-dark {
+  background-color: black;
+  color: white;
+
+  /* Notification bar */
+  .notification {
+    background-color: $dark-background-light;
+    color: $dark-text-light;
+
+    .notification_header {
+      color: $dark-text;
+      background-color: $dark-background-deep;
+    }
+
+    .notification_content-panel.deep {
+      background-color: $dark-background-accent-light;
+      color: $dark-text;
+
+      .notification_content-header {
+        background-color: $dark-background-accent-light;
+        color: $dark-text;
+      }
+
+      .notification_list-item {
+        background-color: $dark-background-light !important;
+        color: $dark-text !important;
+      }
+    }
+  }
+
+  /* Header */
+  .header {
+    background-color: $dark-background-deep;
+    color: $dark-text;
+  }
+
+  /* Footer */
+  .footer {
+    background-color: $dark-background-deep;
+    color: $dark-text-light;
+  }
+
+  /* Navigation */
+  .nav {
+    background-color: $dark-background-deep;
+    color: $dark-text-light;
+
+    &_background-line {
+      border-bottom: 2px solid $captor-accent-light;
+    }
+
+    .nav_header {
+      color: $dark-text-accent;
+    }
+
+    .nav_content.expanded .nav_btn {
+      color: $dark-text;
+      background-color: $dark-background;
+
+      &:hover {
+        background-color: $captor-accent-light !important;
+        color: $dark-text-deep;
+
+        .mat-icon {
+          color: inherit;
+        }
+      }
+    }
+
+    .nav_submenu {
+      .nav_submenu-item {
+        &:not(:last-of-type) {
+          border-color: rgba(255, 255, 255, 0.059) !important;
+        }
+      }
+    }
+  }
+
+  /* Disclaimer */
+  .disclaimer {
+    .disclaimer-warning {
+      background-color: $dark-background;
+    }
+
+    .mat-mdc-card-header.disclaimer-header {
+      color: $light-text-accent;
+    }
+  }
+}

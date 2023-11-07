@@ -1,0 +1,24 @@
+<div class="header mat-elevation-z2" [class.show-notification]="isNotificationOpened">
+  <captor-theme-switch></captor-theme-switch>
+  <div class="header_application-time">
+    <mat-icon class="deep-background">access_time</mat-icon>
+    <span>{{dateTime | date: 'medium'}}</span>
+  </div>
+  <button mat-button class="dropdown-menu-trigger deep-background"
+    [matMenuTriggerFor]="menu">c-username<mat-icon>arrow_drop_down</mat-icon>
+  </button>
+  <button mat-icon-button class="dark-background" (click)="toggleNotification()">
+    <mat-icon [matBadge]="notificationCount" [matBadgeSize]="'medium'">notifications</mat-icon>
+  </button>
+  <button mat-icon-button (click)="toggleNotification()" class="dark-background">
+    <mat-icon>
+      {{ isNotificationOpened ? 'keyboard_arrow_right' : 'keyboard_arrow_left'}}
+    </mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="navigate(DOCNET_URL)">DOCNET</button>
+    <button mat-menu-item (click)="navigate(DOC_INFO_URL)">DOC INFO</button>
+    <button mat-menu-item (click)="navigate(MFA_USER_PROFILE_URL)">MFA User Profile</button>
+    <button mat-menu-item (click)="logout()">Log Out</button>
+  </mat-menu>
+</div>

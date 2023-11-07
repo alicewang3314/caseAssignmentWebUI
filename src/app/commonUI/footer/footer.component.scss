@@ -1,0 +1,21 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  height: 48px;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &.show-notification {
+    padding-right: 260px;
+  }
+
+  &_back-btn {
+    margin-right: 12px;
+  }
+
+  &_text {
+    margin-left: 70px;
+  }
+}

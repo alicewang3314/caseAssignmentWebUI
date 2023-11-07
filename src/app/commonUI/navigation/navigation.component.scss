@@ -1,0 +1,114 @@
+.nav {
+  height: 100vh;
+  position: absolute;
+  z-index: 999;
+  width: 60px;
+  transition: width 0.3s ease-in;
+
+  &.expanded {
+    width: 280px;
+    opacity: 0.9;
+  }
+
+  .captor_icon {
+    height: 65px;
+    font-size: 25pt;
+    border-bottom: 3px; //? todo
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .nav_toggle-btn {
+    height: 50px;
+    font-size: 25pt;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .nav_background-line {
+      position: absolute;
+      width: 100%;
+      z-index: -1;
+    }
+  }
+
+  .nav_header {
+    margin-left: 20px;
+    height: 50px;
+  }
+
+  .nav_content {
+    overflow-y: scroll;
+    height: calc(100vh - 180px);
+
+    &.collapsed {
+      margin: 10px 0 0 0;
+    }
+
+    &.expanded {
+      .nav_btn {
+        font-weight: 500;
+
+        &:hover {
+          cursor: pointer;
+        }
+
+        .nav_btn-item {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+
+          &:hover {
+            cursor: pointer;
+          }
+
+          mat-icon {
+            margin-right: 8px;
+          }
+        }
+      }
+
+      .nav_submenu {
+        padding: 0;
+
+        .nav_submenu-item {
+          &:not(:last-of-type) {
+            border-bottom: 2px solid;
+          }
+        }
+      }
+    }
+  }
+
+
+  ::ng-deep {
+    &.mat-expansion-panel-body {
+      padding: 2px 5px !important;
+    }
+
+    &.mat-expansion-panel-header {
+      padding: 0 16px;
+
+      &.mat-expanded {
+        height: 48px;
+      }
+    }
+  }
+}
+
+::ng-deep {
+  &.cdk-overlay-pane.submenu-cdk-overlay-container {
+    margin-left: 59px !important;
+  }
+
+  &.cdk-overlay-backdrop.cdk-overlay-transparent-backdrop.cdk-overlay-backdrop-showing {
+    margin-left: 60px;
+  }
+}
+
+
+/*Fix for material list not scrolling on ipad issue  */
+[mat-list-item] {
+  touch-action: auto !important;
+}

@@ -1,0 +1,50 @@
+/* Basic colors */
+$captor-accent-lightest: #FFFFFF;
+$captor-accent-light: #EC971F;
+$captor-accent-dark: #003D7C;
+$captor-accent-darkest: #1D1D1D;
+$captor-disabled: rgb(211, 211, 211);
+$captor-disabled-light: grey;
+$captor-disabled-deep: rgb(145, 145, 145);
+$captor-disabled-deepest: rgb(66, 66, 66);
+
+/* Light button colors */
+$light-btn: $captor-accent-light;
+$light-btn-deep: $captor-accent-dark;
+$light-btn-disabled: $captor-disabled;
+
+/* Light backgound colors */
+$light-background: $captor-accent-lightest;
+$light-background-light: #ebf1ef;
+$light-background-accent-light: $captor-accent-light;
+$light-background-accent-deep: $captor-accent-dark;
+$light-background-disabled: $captor-disabled-deep;
+
+/* Light Text colors */
+$light-text: #101010;
+$light-text-light: $captor-accent-lightest;
+$light-text-accent: $captor-accent-light;
+$light-text-accent-deep: $captor-accent-dark;
+$light-text-disabled: $captor-disabled-deep;
+
+/* Dark button colors */
+$dark-btn-light: $captor-accent-light;
+$dark-btn-light-active: $captor-accent-darkest;
+$dark-btn-deep: $captor-accent-darkest;
+$dark-btn-deep-active: $captor-accent-lightest;
+
+/* Dark background colors */
+$dark-background: #101113;
+$dark-background-light: #2e2e2e;
+$dark-background-deep: #1D1D1D;
+$dark-background-accent: $captor-accent-light;
+
+// todo remove
+$dark-background-accent-light: $captor-accent-light;
+
+/* Dark text colors */
+$dark-text: #FFFFFF;
+$dark-text-light: #B6B6B7;
+$dark-text-deep: #101113;
+$dark-text-accent: #C3781A;
+$dark-text-accent-deep: #101113; // todo remove

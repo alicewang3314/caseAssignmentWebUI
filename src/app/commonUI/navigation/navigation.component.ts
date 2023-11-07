@@ -1,60 +1,97 @@
-import { Component, Input } from '@angular/core';
+import { Component, QueryList, ViewChild, ViewChildren, ElementRef, AfterViewInit } from '@angular/core';
+import { MatMenu, MatMenuTrigger, MAT_MENU_DEFAULT_OPTIONS } from '@angular/material/menu';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { MatIconModule } from '@angular/material/icon';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
+import { NgIf, NgFor } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 export type NavItem = {
   name: string;
   url?: string;
   icon?: string;
   children?: NavItem[];
+  isOpen?: boolean;
 }
 
 @Component({
-  selector: 'nav',
+  selector: 'captor-nav',
   templateUrl: './navigation.component.html',
-  styleUrls: ['./navigation.component.scss']
+  styleUrls: ['./navigation.component.scss'],
+  animations: [
+    trigger('listAnimation', [
+      transition('*=>*', [
+        style({ opacity: 0, transform: 'translateY(-10PX)' }),
+        animate('350ms', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ]),
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms', style({ opacity: 0.8 }))
+      ])
+    ])
+  ],
+  providers: [
+    {
+      provide: MAT_MENU_DEFAULT_OPTIONS,
+      useValue: { overlayPanelClass: 'submenu-cdk-overlay-container' }
+    }
+  ],
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    MatButtonModule,
+    RouterModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatIconModule,
+    MatExpansionModule,
+    MatListModule
+  ]
 })
 export class NavigationComponent {
+  @ViewChild('submenu') submenu?: MatMenu;
+  @ViewChildren(MatMenuTrigger) menuTriggers?: QueryList<MatMenuTrigger>;
   isExpanded: boolean = false;
   navItems: NavItem[] = [
     {
       name: 'Individual Reentrant Search',
       url: '#',
-      icon: 'account_box'
+      icon: 'person_search'
     },
     {
-      name: 'Case Assignment',
-      icon: 'account_box',
+      name: 'Charge Codes',
+      icon: 'text_snippet',
       children: [
         {
-          name: 'Manage Units',
-          url: '/searchUnit'
-        },
-        {
-          name: 'Manage Staff',
-          url: '/viewStaffAssignment'
-        },
-        {
-          name: 'View Reentrant Assignment',
-          url: '/viewUnitManagerAssignment'
-        },
-        {
-          name: 'Bulk Reassignment',
-          url: '/createBulkAssignment'
+          name: 'Search Code',
+          url: '#'
         }
       ]
     },
     {
-      name: 'Charge Codes',
-      icon: 'account_box',
+      name: 'Contact Management',
+      icon: 'contact_phone',
       children: [
         {
-          name: 'Contact Management',
+          name: 'Contact Directory',
+          url: '#'
+        },
+        {
+          name: 'Judge Directory',
           url: '#'
         }
       ]
     },
     {
       name: 'GTS',
-      icon: 'account_box',
+      icon: 'gavel',
       children: [
         {
           name: 'GTS Search',
@@ -64,7 +101,7 @@ export class NavigationComponent {
     },
     {
       name: 'IMS',
-      icon: 'account_box',
+      icon: 'groups',
       children: [
         {
           name: 'IMS Search',
@@ -98,7 +135,7 @@ export class NavigationComponent {
     },
     {
       name: 'Intake',
-      icon: 'account_box',
+      icon: 'person_add',
       children: [
         {
           name: 'Request AOPC Data',
@@ -116,7 +153,7 @@ export class NavigationComponent {
     },
     {
       name: 'Location Management',
-      icon: 'account_box',
+      icon: 'pin_drop',
       children: [
         {
           name: 'Organization Search',
@@ -149,8 +186,7 @@ export class NavigationComponent {
         {
           name: 'Search Planned Bed Move',
           url: '#'
-        }
-        ,
+        },
         {
           name: 'Search Online Offline',
           url: '#'
@@ -168,11 +204,11 @@ export class NavigationComponent {
     {
       name: 'Merge Request Status',
       url: '#',
-      icon: 'account_box'
+      icon: 'screen_search_desktop'
     },
     {
       name: 'Parole Case Notes',
-      icon: 'account_box',
+      icon: 'description',
       children: [
         {
           name: 'Bulk Note',
@@ -190,26 +226,27 @@ export class NavigationComponent {
     },
     {
       name: 'Reentrant Details',
-      icon: 'account_box',
+      icon: 'folder_shared',
       children: [
         {
           name: 'Nickname Search',
           url: '#'
         }
       ]
-    }, {
+    },
+    {
       name: 'Reports',
       url: '#',
-      icon: 'account_box'
+      icon: 'summarize'
     },
     {
       name: 'Request Search',
       url: '#',
-      icon: 'account_box'
+      icon: 'manage_search'
     },
     {
       name: 'Restrict Reentrant Data',
-      icon: 'account_box',
+      icon: 'disabled_visible',
       children: [
         {
           name: 'View Restrictions',
@@ -223,7 +260,7 @@ export class NavigationComponent {
     }, {
       name: 'Tasks',
       url: '#',
-      icon: 'account_box'
+      icon: 'task'
     },
     {
       name: 'VANS',
@@ -268,4 +305,59 @@ export class NavigationComponent {
       ]
     }
   ];
+  //Delay the rendering of the expanded menu content
+  isReady: boolean = false;
+  isSubmenuReady: boolean = false;
+  private _activeChildNavItems?: NavItem[];
+  private _activeTrigger?: MatMenuTrigger;
+  private _mouseOverMenu?: boolean;
+
+  get activeChildNavItems() {
+    return this._activeChildNavItems;
+  }
+
+  toggleNavigation() {
+    this.isExpanded = !this.isExpanded;
+
+    if (this.isExpanded) {
+      setTimeout(() => this.isReady = true, 300);
+    } else {
+      this.isReady = false;
+    }
+  }
+
+  openSubmenu(idx: number, children?: NavItem[]) {
+    console.log('open submenu');
+    const newTrigger = this.menuTriggers?.toArray()[idx];
+
+    // If over same trigger, do nothing
+    if (newTrigger === this._activeTrigger) {
+      return;
+    }
+
+    // If over different trigger, close previously opened menu
+    if (this._activeTrigger && this._activeTrigger.menuOpened) {
+      this._activeTrigger.closeMenu();
+    }
+
+    this._activeChildNavItems = children;
+    this._activeTrigger = newTrigger;
+
+    // If has submenu, open it
+    if (children) {
+      this._activeChildNavItems = children;
+      this._activeTrigger?.openMenu();
+    }
+  }
 }
+
+
+/*
+TODO:
+
+On ipad
+
+Clean up code
+
+*/
+

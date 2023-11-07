@@ -18,9 +18,7 @@ import { ViewUnitManagerAssignment } from './viewUnitManagerAssignment/viewUnitM
 import { CreateBulkAssignment } from './createBulkAssignment/createBulkAssignment';
 import { UnitDeleteModalPopup } from './searchUnit/searchUnit';
 import { DoubleDirectionSelectComponent } from './double-direction-select/double-direction-select.component';
-import { NavigationComponent } from './navigation/navigation.component';
-import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
+import { HeaderComponent, FooterComponent, NavigationComponent, NotificationComponent } from './commonUI';
 import { ReassignModalPopup } from './viewUnitManagerAssignment/viewUnitManagerAssignment';
 import { EditUnit } from './editUnit/editUnit';
 import { EmployeeSearchDialogComponent } from './createStaff/employee-search-dialog/employee-search-dialog.component';
@@ -33,7 +31,7 @@ import { ReassignModalPopupBulk } from './createBulkAssignment/createBulkAssignm
     UnitDeleteModalPopup, DoubleDirectionSelectComponent,
     ReassignModalPopup, SearchUnitModalPopup,
     EditUnit, ReassignModalPopupBulk,
-    NavigationComponent, HeaderComponent, FooterComponent, EmployeeSearchDialogComponent
+    EmployeeSearchDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +43,11 @@ import { ReassignModalPopupBulk } from './createBulkAssignment/createBulkAssignm
     MaterialExampleModule,
     ReactiveFormsModule,
     MatTableModule,
-    MatIconModule
+    MatIconModule,
+    NavigationComponent,
+    HeaderComponent,
+    FooterComponent,
+    NotificationComponent
   ],
   providers: [StaffService],
   bootstrap: [AppComponent]

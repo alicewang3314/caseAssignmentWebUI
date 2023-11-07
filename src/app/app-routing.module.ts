@@ -9,7 +9,7 @@ import { CreateBulkAssignment } from './createBulkAssignment/createBulkAssignmen
 import { EditUnit } from './editUnit/editUnit';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/searchUnit', pathMatch: 'full' },
+  // { path: '', redirectTo: '/searchUnit', pathMatch: 'full' },
   { path: 'searchUnit', component: SearchUnit },
   { path: 'createUnit', component: CreateUnit },
   { path: 'viewStaffAssignment', component: ViewStaffAssignment },
@@ -17,6 +17,7 @@ const routes: Routes = [
   { path: 'viewUnitManagerAssignment', component: ViewUnitManagerAssignment },
   { path: 'createBulkAssignment', component: CreateBulkAssignment },
   { path: 'editUnit', component: EditUnit },
+  { path: '**', redirectTo: '/searchUnit'}
 ];
 
 @NgModule({

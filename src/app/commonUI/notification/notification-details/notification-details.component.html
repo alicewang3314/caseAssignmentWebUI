@@ -1,0 +1,13 @@
+<mat-card class="notification-details deep">
+  <mat-card-header>
+    <h4>{{header}}</h4>
+  </mat-card-header>
+  <mat-card-content>
+    <div> {{content}} </div>
+    <div class="notification-details_divider"></div>
+    <div class="notification-details_time">
+      <p>Created Date: {{createdDate | date: 'fullDate'}}</p>
+      <p>Expiry Date: {{expiryDate | date: 'fullDate'}}</p>
+    </div>
+  </mat-card-content>
+</mat-card>

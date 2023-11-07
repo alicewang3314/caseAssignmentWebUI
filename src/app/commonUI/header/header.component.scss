@@ -1,0 +1,40 @@
+.header {
+  position: fixed;
+  width: 100%;
+  height: 65px;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  align-items: center;
+  padding-right: 15px;
+
+  ::ng-deep.mat-badge-content.mat-badge-active {
+    font-family: Roboto, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  &.show-notification {
+    padding-right: 260px;
+  }
+
+  .header_application-time {
+    display: inline-flex;
+    align-items: center;
+    font-size: smaller;
+
+    .mat-icon {
+      margin-right: 4px;
+    }
+  }
+
+  .mat-icon {
+    vertical-align: bottom;
+  }
+
+  &>* {
+    margin-left: 24px;
+  }
+}

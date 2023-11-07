@@ -1,0 +1,129 @@
+.notification {
+  opacity: 0;
+  z-index: 999;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 0;
+  height: 100vh;
+  transition: opacity 0.3s ease, width 0.3s ease;
+
+  &.opened {
+    opacity: 0.9;
+    width: 260px;
+  }
+
+  .notification_header {
+    height: 65px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 1;
+  }
+
+  .notification_clear-all {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-top: 10px;
+
+    .notification_clear-all-btn {
+      border: none;
+      // Do not override in theme
+      background-color: transparent;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .notification_buttons {
+    width: 100%;
+    margin-top: -20px;
+
+    &>* {
+      flex-basis: 50%;
+    }
+  }
+
+  .notification_filter {
+    &-input {
+      padding: 4px;
+      padding-top: 10px;
+      width: 100%;
+    }
+
+    .notification_filter-clear-btn {
+      border: none;
+      background-color: transparent;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .notification_filter-search-btn {
+      border: none;
+      background-color: transparent;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .notification_content {
+    height: calc(100vh - 223px);
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
+    .mat-expansion-panel-header {
+      height: 50px;
+    }
+
+
+    .mat-accordion .mat-expansion-panel {
+      border-radius: 0;
+
+      ::ng-deep.mat-expansion-panel-body {
+        padding: 0 12px;
+      }
+    }
+
+    .notification_content-panel {
+      .mdc-list-item.mdc-list-item--with-three-lines .mdc-list-item__start {
+        margin: 16px 6px 0 -5px;
+      }
+
+      .mat-mdc-list-item.mdc-list-item.mdc-list-item--with-leading-icon.mdc-list-item--with-three-lines {
+        padding: 0px;
+        padding-top: 10px;
+        height: 70px;
+      }
+
+      ::ng-deep.mdc-list-item__content {
+        flex: 0.85;
+      }
+
+      .notification_remove-btn {
+        position: absolute;
+        right: -7px;
+        top: 28px;
+        background-color: transparent;
+        border: none;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .notification_empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 30px;
+  }
+}

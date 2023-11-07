@@ -1,0 +1,15 @@
+<div class="container">
+  <mat-card *ngIf="showCard" class="disclaimer deep" [@fadeAnimation]>
+    <mat-card-header class="disclaimer-header">
+      <mat-card-title>{{header}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="disclaimer-content">
+      <p>{{disclaimer}}</p>
+      <div class="disclaimer-warning" *ngIf="showWarningMsg">{{disclainerWarningMsg}}</div>
+    </mat-card-content>
+    <mat-card-actions class="disclaimer-actions">
+      <button class="deep-background" mat-button (click)="setDisclaimerStatus(false)">Decline</button>
+      <button class="deep-background" mat-button (click)="setDisclaimerStatus(true)">Accpet</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
