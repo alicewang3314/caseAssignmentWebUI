@@ -182,10 +182,3 @@ export class NotificationComponent {
     private _platform: Platform
   ) { }
 }
-
-/*
-todo:
-1- how does notifications sort
-2- the expansion should be opened or closed?
-3- showing more indicator when more notification avaliable
-*/

@@ -1,8 +1,9 @@
 .nav {
+  display: block;
   height: 100vh;
+  width: 60px;
   position: absolute;
   z-index: 999;
-  width: 60px;
   transition: width 0.3s ease-in;
 
   &.expanded {
@@ -12,8 +13,7 @@
 
   .captor_icon {
     height: 65px;
-    font-size: 25pt;
-    border-bottom: 3px; //? todo
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,7 +21,7 @@
 
   .nav_toggle-btn {
     height: 50px;
-    font-size: 25pt;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -34,19 +34,28 @@
   }
 
   .nav_header {
-    margin-left: 20px;
     height: 50px;
+    padding-left: 20px;
+    padding-top: 10px;
+
+    h3 {
+      font-size: 22px;
+      font-weight: 600;
+    }
   }
 
   .nav_content {
+    width: 100%;
     overflow-y: scroll;
-    height: calc(100vh - 180px);
 
     &.collapsed {
+      height: calc(100vh - 172px);
       margin: 10px 0 0 0;
     }
 
     &.expanded {
+      height: calc(100vh - 165px);
+
       .nav_btn {
         font-weight: 500;
 
@@ -97,6 +106,7 @@
   }
 }
 
+/* For submenu in collapsed mode */
 ::ng-deep {
   &.cdk-overlay-pane.submenu-cdk-overlay-container {
     margin-left: 59px !important;

@@ -7,30 +7,28 @@
 //   height: 100%;
 // }
 
-* {
-  box-sizing: border-box;
-}
-
-
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  height: 100vh;
-  width: 100vw;
-  // Todo: fix
-  overflow: hidden;
-}
-
 @import url(/node_modules/bootstrap/dist/css/bootstrap.css);
 @import url(assets/material-icons.scss);
 
 /* Import custom captor theme */
 @import 'src/app/commonUI/theme/captor-theme.scss';
 
-// .viewUnitManagerAssignment {
-//   .mat-expansion-indicator {
-//     &:after {
-//       color: orange;
-//     }
-//   }
-// }
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.viewUnitManagerAssignment {
+  .mat-expansion-indicator {
+    &:after {
+      color: orange;
+    }
+  }
+}

@@ -16,9 +16,14 @@
   .notification_header {
     height: 65px;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
-    opacity: 1;
+
+    h3 {
+      font-size: 24px;
+      font-weight: 600px;
+      margin: 0;
+    }
   }
 
   .notification_clear-all {
