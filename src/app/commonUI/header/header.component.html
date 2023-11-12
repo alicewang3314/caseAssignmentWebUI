@@ -7,10 +7,10 @@
   <button mat-button class="dropdown-menu-trigger deep-background"
     [matMenuTriggerFor]="menu">c-username<mat-icon>arrow_drop_down</mat-icon>
   </button>
-  <button mat-icon-button class="dark-background center" (click)="toggleNotification()">
+  <button mat-icon-button class="dark-background" (click)="toggleNotification()">
     <mat-icon [matBadge]="notificationCount" [matBadgeSize]="'medium'">notifications</mat-icon>
   </button>
-  <button mat-icon-button (click)="toggleNotification()" class="dark-background center">
+  <button mat-icon-button (click)="toggleNotification()" class="dark-background">
     <mat-icon>
       {{ isNotificationOpened ? 'keyboard_arrow_right' : 'keyboard_arrow_left'}}
     </mat-icon>
