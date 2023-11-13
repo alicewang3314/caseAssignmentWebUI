@@ -67,6 +67,7 @@
           display: flex;
           justify-content: flex-start;
           align-items: center;
+          transition: none;
 
           &:hover {
             cursor: pointer;
@@ -74,6 +75,7 @@
 
           mat-icon {
             margin-right: 8px;
+            transition: inherit;
           }
         }
       }
