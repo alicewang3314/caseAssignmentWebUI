@@ -5,4 +5,9 @@
   right: 0px;
   bottom: 48px;
   padding: 20px 40px;
+  transition: width 0.3s;
+
+  &.notification-opened {
+    right: 260px;
+  }
 }

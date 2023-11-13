@@ -2,7 +2,7 @@
 <captor-footer></captor-footer>
 <captor-nav></captor-nav>
 <captor-notification></captor-notification>
-<div class="app-container">
+<div class="app-container" [class.notification-opened]="notification.isOpened">
   <div class="" style="margin-top:65px;">
     <h1 style="color:rgba(248,151,29,.77);     border-bottom: 2px solid rgba(248,151,29,.77)">CASE ASSIGNMENT</h1>
     <router-outlet></router-outlet>
