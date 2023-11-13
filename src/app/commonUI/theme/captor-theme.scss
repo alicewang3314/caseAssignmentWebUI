@@ -11,8 +11,11 @@
 
   /* Notification bar */
   .notification {
+    background-color: $light-background;
+
     .notification_header {
       color: $light-text-light;
+      background-color: $light-background-accent-deep;
     }
 
     .mat-expansion-panel-body {
@@ -38,6 +41,8 @@
 
   /* Navigation */
   .nav {
+    background-color: $light-background;
+
     &_background-line {
       border-bottom: 2px solid $captor-accent-dark;
     }

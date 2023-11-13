@@ -9,7 +9,6 @@ import { CreateBulkAssignment } from './createBulkAssignment/createBulkAssignmen
 import { EditUnit } from './editUnit/editUnit';
 
 const routes: Routes = [
-  // { path: '', redirectTo: '/searchUnit', pathMatch: 'full' },
   { path: 'searchUnit', component: SearchUnit },
   { path: 'createUnit', component: CreateUnit },
   { path: 'viewStaffAssignment', component: ViewStaffAssignment },
