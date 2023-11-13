@@ -779,6 +779,7 @@ $light-theme: mat.define-light-theme((color: (primary: $light-primary,
 
       &:hover {
         background-color: $captor-accent-light !important;
+        opacity: 0.9;
       }
     }
 
