@@ -5,6 +5,7 @@
   right: 0px;
   bottom: 48px;
   padding: 30px 6vw;
+  overflow-y: scroll;
   transition: width 0.3s;
 
   &.notification-opened {
