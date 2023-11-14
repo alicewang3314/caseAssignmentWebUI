@@ -64,6 +64,27 @@ export class NavigationComponent {
       name: 'Individual Reentrant Search',
       url: '#',
       icon: 'person_search'
+    }, {
+      name: 'Case Assignment',
+      icon: 'assignment',
+      children: [
+        {
+          name: 'Manage Units',
+          url: '/searchUnit'
+        },
+        {
+          name: 'Manage Staff',
+          url: '/viewStaffAssignment'
+        },
+        {
+          name: 'View Reentrant Assignment',
+          url: '/viewUnitManagerAssignment'
+        },
+        {
+          name: 'Bulk Reassignment',
+          url: '/createBulkAssignment'
+        }
+      ]
     },
     {
       name: 'Charge Codes',
@@ -351,13 +372,4 @@ export class NavigationComponent {
   }
 }
 
-
-/*
-TODO:
-
-On ipad
-
-Clean up code
-
-*/
 

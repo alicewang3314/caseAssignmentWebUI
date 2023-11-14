@@ -46,7 +46,7 @@
 <mat-menu class="nav_submenu deep" #submenu="matMenu" style="pointer-events: auto" [hasBackdrop]="true"
   [xPosition]="'after'" [yPosition]="'above'" [overlapTrigger]="true">
   <ng-template matMenuContent>
-    <a mat-menu-item class="nav_submenu-item" *ngFor="let item of activeChildNavItems">
+    <a mat-menu-item class="nav_submenu-item" *ngFor="let item of activeChildNavItems" [routerLink]="item.url">
       {{item.name}}
     </a>
   </ng-template>
