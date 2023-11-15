@@ -16,7 +16,7 @@ export class NotificationService {
       night. It was who he had been for the last ten years
       and he had no idea that was all about to change.`,
       time: new Date(2023, 9, 11),
-      expires: new Date(2023, 9, 1),
+      expires: new Date(2025, 9, 1),
       source: 'captor'
     },
     {
@@ -29,7 +29,7 @@ export class NotificationService {
         But the stupidity of the group of people he was talking
         to made him change his mind.`,
       time: new Date(2023, 9, 11),
-      expires: new Date(2023, 9, 1),
+      expires: new Date(2025, 9, 1),
       source: 'captor'
     },
     {
@@ -42,7 +42,7 @@ export class NotificationService {
       of the group of people he was talking to made him change his
        mind.`,
       time: new Date(2023, 7, 11),
-      expires: new Date(2023, 7, 12),
+      expires: new Date(2025, 7, 12),
       source: 'captor'
     },
     {
@@ -54,7 +54,7 @@ export class NotificationService {
       were less fortunate or who had less money than him. But
        the stupidity of the group of people he was talking to
        made him change his mind.`,
-      expires: new Date(2023, 9, 12),
+      expires: new Date(2025, 9, 12),
       time: new Date(),
       source: 'vans'
     },
@@ -69,7 +69,7 @@ export class NotificationService {
           rules to live by, but it had served him well thus far in
            the 50+ years of his life.`,
       time: new Date(),
-      expires: new Date(2023, 9, 12),
+      expires: new Date(2025, 9, 12),
       source: 'vans'
     },
     {
@@ -82,7 +82,7 @@ export class NotificationService {
       of the group of people he was talking to made him change his
        mind.`,
       time: new Date(2023, 7, 11),
-      expires: new Date(2023, 7, 12),
+      expires: new Date(2025, 7, 12),
       source: 'ims'
     },
     {
@@ -94,7 +94,7 @@ export class NotificationService {
       were less fortunate or who had less money than him. But
        the stupidity of the group of people he was talking to
        made him change his mind.`,
-      expires: new Date(2023, 9, 12),
+      expires: new Date(2025, 9, 12),
       time: new Date(),
       source: 'ims'
     },
@@ -107,7 +107,7 @@ export class NotificationService {
       were less fortunate or who had less money than him. But
        the stupidity of the group of people he was talking to
        made him change his mind.`,
-      expires: new Date(2023, 9, 12),
+      expires: new Date(2025, 9, 12),
       time: new Date(),
       source: 'ims'
     }
@@ -140,10 +140,16 @@ export class NotificationService {
     return this._notifications;
   }
 
-  clearAllNotifications() {
+  clearAllNotifications(timeframe: 'all' | 'today') {
     // TODO:call server to clear all notifications
-    this._notifications = [];
-    return this._notifications;
+    if (timeframe === 'all') {
+      this._notifications = [];
+    } else {
+      const today = new Date().toDateString();
+      this._notifications = this._notifications.filter(({ time }) => time.toDateString() != today);
+    }
+
+    // return this._notifications;
   }
 
   constructor() { }

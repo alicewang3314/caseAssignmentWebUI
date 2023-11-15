@@ -61,8 +61,8 @@ export class NotificationComponent {
 
   confirmClearAll() {
     this.isConfirmClearAll = false;
-    this.notifications = this._service.clearAllNotifications();
-    // todo: make notification subscribable (maybe)
+    this._service.clearAllNotifications(this.timeFrame);
+    this.notifications = this._getNotifications();
   }
 
   getExpiresCountdown(expires: Date) {
@@ -81,12 +81,10 @@ export class NotificationComponent {
 
   updateFilter() {
     this.notifications = this._getNotifications();
-    // todo: how to deal with opened panel
   }
 
-  onSelectedTimeFrameChange(timeFrame: any) {
+  onSelectedTimeFrameChange() {
     this.notifications = this._getNotifications();
-    // todo:  panels status after timeframe change
   }
 
 
@@ -104,25 +102,17 @@ export class NotificationComponent {
     return _notifications;
   }
 
-
-
   private _applyFilter(query: string, notifications: any[]) {
     return notifications.filter((x) => JSON.stringify(x).toLowerCase().indexOf(query) !== -1);
   }
 
   private _getTodayNotifications(notifications: any[]) {
-    const today = new Date();
+    const today = new Date().toDateString();
 
-    return notifications.filter(({ time }) => {
-      return time.getDate() === today.getDate() &&
-        time.getMonth() === today.getMonth() &&
-        time.getFullYear() === today.getFullYear()
-    });
+    return notifications.filter(({ time }) => time.toDateString() === today);
   }
 
   openDetails(origin: MatListItem, data: any) {
-    console.log('open details');
-
     const positionStrategy = this._overlay.position()
       .flexibleConnectedTo(origin._elementRef.nativeElement)
       .withPositions([{
@@ -165,20 +155,7 @@ export class NotificationComponent {
     }
   }
 
-  handleTouchStart() {
-    // TODO: CLEAN
-    // if (!this._isMouseOver) {
-
-    // }
-  }
-
-  handleTouchEnd() {
-    // console.log('touch end');
-    // this.closeDetails();
-  }
-
   constructor(private _service: NotificationService,
-    private _overlay: Overlay,
-    private _platform: Platform
+    private _overlay: Overlay
   ) { }
 }

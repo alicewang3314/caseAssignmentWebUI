@@ -31,7 +31,7 @@
       </mat-form-field>
     </div>
     <mat-button-toggle-group class="notification_buttons" appearance="legacy" [(ngModel)]="timeFrame"
-      (ngModelChange)="onSelectedTimeFrameChange($event)">
+      (ngModelChange)="onSelectedTimeFrameChange()">
       <mat-button-toggle value="today" [checked]="true">Today</mat-button-toggle>
       <mat-button-toggle value="all">All Notifications</mat-button-toggle>
     </mat-button-toggle-group>
@@ -45,8 +45,7 @@
           </mat-expansion-panel-header>
           <mat-list>
             <mat-list-item class="notification_list-item" *ngFor="let item of filterNotificationBySource(source)"
-              (mouseenter)="openDetails(details,item)" (mouseleave)="closeDetails()" (touchstart)="handleTouchStart()"
-              (touchend)="handleTouchEnd()" #details>
+              (mouseenter)="openDetails(details,item)" (mouseleave)="closeDetails()" #details>
               <mat-icon matListItemIcon>description</mat-icon>
               <span matListItemTitle>{{item.title}}</span>
               <button class="notification_remove-btn" matToolTip="Delete" (click)="removeNotificationById(item.id)">
