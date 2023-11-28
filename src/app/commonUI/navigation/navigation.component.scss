@@ -56,6 +56,10 @@
     &.expanded {
       height: calc(100vh - 165px);
 
+      mat-expansion-panel {
+        border-radius: 0;
+      }
+
       .nav_btn {
         font-weight: 500;
 
