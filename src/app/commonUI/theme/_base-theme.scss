@@ -1,5 +1,9 @@
 @import './_colors.scss';
 
+/* Use default typogrraphy for angular */
+$captor-typography: mat.define-typography-config();
+@include mat.typography-hierarchy($captor-typography);
+
 /* Define default light theme for  */
 $light-primary: mat.define-palette(mat.$indigo-palette, 900);
 $light-accent: mat.define-palette(mat.$orange-palette);
