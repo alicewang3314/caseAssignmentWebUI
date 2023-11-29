@@ -20,7 +20,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 
 @Component({
   selector: 'createStaff',
-  templateUrl: 'createStaff.html'
+  templateUrl: 'createStaff.html',
 })
 
 export class CreateStaff {

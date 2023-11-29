@@ -40,13 +40,13 @@
 
 
   <div class="col-12">
-    <double-direction-select [leftColumnName]="leftColumnName" [rightColumnName]="rightColumnName"
+    <captor-double-direction-select [leftColumnName]="leftColumnName" [rightColumnName]="rightColumnName"
       [leftColumn]="leftColumnVal" [rightColumn]="rightColumnVal"
-      (valueChange)="getNewValue($event)"></double-direction-select>
+      (valueChange)="getNewValue($event)"></captor-double-direction-select>
   </div>
 
   <div class="example-button-container float-start" style="margin-top: 20px;">
-    <button mat-raised-button color="basic" style="background-color:beige"
+    <button mat-raised-button color="basic" style="background-color:beige; color: black"
       routerLink="/viewStaffAssignment">Cancel</button>
   </div>
   <div class="example-button-container float-end" style="margin-top: 20px;" *ngIf="newToRightEx1.length>0">

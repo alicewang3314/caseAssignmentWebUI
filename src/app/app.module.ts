@@ -17,18 +17,19 @@ import { CreateStaff } from './createStaff/createStaff';
 import { ViewUnitManagerAssignment } from './viewUnitManagerAssignment/viewUnitManagerAssignment';
 import { CreateBulkAssignment } from './createBulkAssignment/createBulkAssignment';
 import { UnitDeleteModalPopup } from './searchUnit/searchUnit';
-import { DoubleDirectionSelectComponent } from './double-direction-select/double-direction-select.component';
 import { HeaderComponent, FooterComponent, NavigationComponent, NotificationComponent } from './commonUI';
 import { ReassignModalPopup } from './viewUnitManagerAssignment/viewUnitManagerAssignment';
 import { EditUnit } from './editUnit/editUnit';
 import { EmployeeSearchDialogComponent } from './createStaff/employee-search-dialog/employee-search-dialog.component';
 import { ReassignModalPopupBulk } from './createBulkAssignment/createBulkAssignment';
+import { DoubleDirectionSelectComponent } from 'src/app/components';
+
 @NgModule({
   declarations: [
     AppComponent, SearchUnit, CreateUnit,
     ViewStaffAssignment, ViewUnitManagerAssignment, CreateStaff,
     CreateBulkAssignment,
-    UnitDeleteModalPopup, DoubleDirectionSelectComponent,
+    UnitDeleteModalPopup,
     ReassignModalPopup, SearchUnitModalPopup,
     EditUnit, ReassignModalPopupBulk,
     EmployeeSearchDialogComponent
@@ -47,7 +48,8 @@ import { ReassignModalPopupBulk } from './createBulkAssignment/createBulkAssignm
     NavigationComponent,
     HeaderComponent,
     FooterComponent,
-    NotificationComponent
+    NotificationComponent,
+    DoubleDirectionSelectComponent
   ],
   providers: [StaffService],
   bootstrap: [AppComponent]
