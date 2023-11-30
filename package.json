@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --base-href '/caseAssignment/' --output-path 'dist/caseAssignment'",
+    "build": "ng build --base-href /CaseAssignment/ --output-path dist/CaseAssignment",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
