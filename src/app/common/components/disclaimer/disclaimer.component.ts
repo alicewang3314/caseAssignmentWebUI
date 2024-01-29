@@ -4,7 +4,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { LoadingService } from '../loading/loading.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf } from '@angular/common'
+import { NgIf } from '@angular/common';
 
 export const fadeAnimation = trigger('fadeAnimation', [
   transition(':leave', [
@@ -18,14 +18,14 @@ export const fadeAnimation = trigger('fadeAnimation', [
 ]);
 
 @Component({
-  selector: 'login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  selector: 'disclaimer',
+  templateUrl: './disclaimer.component.html',
+  styleUrls: ['./disclaimer.component.scss'],
   animations: [fadeAnimation],
   standalone: true,
   imports: [MatCardModule, MatButtonModule, NgIf]
 })
-export class LoginComponent {
+export class DisclaimerComponent {
   private _isDisclaimerAgreed?: boolean;
   header = 'Disclaimer';
   disclaimer = `Information displayed following access to the Pennsylvania Department of Corrections and
@@ -59,12 +59,19 @@ export class LoginComponent {
       this.showCard = false;
 
       // TODO: REMOVE
-      this._loading.open();
+      // this._loading.open();
 
+      // give timeout to allow animation
       setTimeout(() => {
-        this._router.navigateByUrl('/app');
-        this._loading.close()
+        this._router.navigateByUrl('');
       }, 1000);
+
+
+
+      // setTimeout(() => {
+      //   this._router.navigateByUrl('');
+      //   this._loading.close()
+      // }, 1000);
     }
   }
 

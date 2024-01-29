@@ -5,7 +5,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { NotificationService } from '../notification/notification.service';
 import { MatBadgeModule } from '@angular/material/badge';
-import { CaptorThemeSwitchComponent } from '../theme';
+import { CaptorThemeSwitchComponent } from '../../theme';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({

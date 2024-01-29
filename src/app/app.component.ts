@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { CaptorThemeService } from 'src/app/commonUI/theme/captor-theme.service';
-import { NotificationService } from 'src/app/commonUI/notification/notification.service';
+import { CaptorThemeService } from 'src/app/common/theme/captor-theme.service';
+import { NotificationService } from 'src/app/common/components/notification/notification.service';
 
 @Component({
   selector: 'app-root',

@@ -2,7 +2,7 @@
 @import './_styles.scss';
 
 * {
-  transition: background-color, color 0.3s ease;
+  transition: background-color, color 0.2s ease;
 }
 
 /*------------- Light theme --------------*/
@@ -81,10 +81,14 @@
   }
 
   /* Disclaimer */
-  .disclaimer {
-    .disclaimer-warning {
-      background-color: $light-background-light;
-      color: $light-text-accent-deep;
+  .disclaimer-container {
+    background-color: $light-background-light;
+
+    .disclaimer {
+      .disclaimer-warning {
+        background-color: $light-background-light;
+        color: $light-text-accent-deep;
+      }
     }
   }
 }
@@ -170,13 +174,16 @@
   }
 
   /* Disclaimer */
-  .disclaimer {
-    .disclaimer-warning {
-      background-color: $dark-background;
-    }
+  .disclaimer-container {
+    background-color: $dark-background;
+    .disclaimer {
+      .disclaimer-warning {
+        background-color: $dark-background;
+      }
 
-    .mat-mdc-card-header.disclaimer-header {
-      color: $light-text-accent;
+      .mat-mdc-card-header.disclaimer-header {
+        color: $light-text-accent;
+      }
     }
   }
 }

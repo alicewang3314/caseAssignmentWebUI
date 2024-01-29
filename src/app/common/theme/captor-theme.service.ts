@@ -17,11 +17,11 @@ export class CaptorThemeService {
 
   private _setTheme(theme: string) {
     this._theme = theme;
-    sessionStorage.setItem('themeChoice', theme);
+    sessionStorage.setItem('themeChoice', theme.toUpperCase());
   }
 
   private _getTheme() {
-    const userTheme = sessionStorage.getItem('themeChoice');
+    const userTheme = sessionStorage.getItem('themeChoice')?.toLowerCase();
 
     if (userTheme) {
       this._theme = userTheme;

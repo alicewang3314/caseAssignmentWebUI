@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "lcl": "ng serve --configuration=local",
     "build": "ng build --base-href /CaseAssignment/ --output-path dist/CaseAssignment",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

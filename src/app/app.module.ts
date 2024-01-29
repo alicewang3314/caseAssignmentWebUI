@@ -1,4 +1,5 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,12 +18,20 @@ import { CreateStaff } from './createStaff/createStaff';
 import { ViewUnitManagerAssignment } from './viewUnitManagerAssignment/viewUnitManagerAssignment';
 import { CreateBulkAssignment } from './createBulkAssignment/createBulkAssignment';
 import { UnitDeleteModalPopup } from './searchUnit/searchUnit';
-import { HeaderComponent, FooterComponent, NavigationComponent, NotificationComponent } from './commonUI';
+import { HeaderComponent, FooterComponent, NavigationComponent, NotificationComponent } from './common';
 import { ReassignModalPopup } from './viewUnitManagerAssignment/viewUnitManagerAssignment';
 import { EditUnit } from './editUnit/editUnit';
 import { EmployeeSearchDialogComponent } from './createStaff/employee-search-dialog/employee-search-dialog.component';
 import { ReassignModalPopupBulk } from './createBulkAssignment/createBulkAssignment';
 import { DoubleDirectionSelectComponent } from 'src/app/components';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { UserService } from 'src/app/common/services/user.service';
+import { MockInterceptor } from 'src/app/mock.interceptor';
+
+function appInitializer(user: UserService): () => Observable<any> {
+  return () => user.initUser();
+}
 
 @NgModule({
   declarations: [
@@ -51,7 +60,20 @@ import { DoubleDirectionSelectComponent } from 'src/app/components';
     NotificationComponent,
     DoubleDirectionSelectComponent
   ],
-  providers: [StaffService],
+  providers: [
+    StaffService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MockInterceptor,
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializer,
+      deps: [UserService],
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
