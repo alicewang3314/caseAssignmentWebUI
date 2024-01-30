@@ -16,9 +16,9 @@ export const canActiveUser: CanActivateFn | CanActivateChildFn = (
   if (canActiveApp) return true;
 
   if (!auth.user.loggedIn) {
-    router.navigateByUrl('unauthorized');
+    router.navigate(['/unauthorized']);
   } else if (!auth.user.agreedToDisclaimer) {
-    router.navigateByUrl('login');
+    router.navigate(['/login']);
   }
 
   return false;

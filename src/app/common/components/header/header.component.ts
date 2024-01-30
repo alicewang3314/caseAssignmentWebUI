@@ -7,6 +7,7 @@ import { NotificationService } from '../notification/notification.service';
 import { MatBadgeModule } from '@angular/material/badge';
 import { CaptorThemeSwitchComponent } from '../../theme';
 import { MatButtonModule } from '@angular/material/button';
+import { UserService } from '../../services/user.service'
 
 @Component({
   selector: 'captor-header',
@@ -30,8 +31,8 @@ export class HeaderComponent {
   dateTime = new Date();
 
   logout() {
-    // TODO: Logic for auth and user logout
-    this._router.navigate(['/login']);
+    this._user.logout();
+    this._router.navigate(['/unauthorized']);
   }
 
   navigate(url: string) {
@@ -50,7 +51,7 @@ export class HeaderComponent {
     return this._notificationService.notificationCount;
   }
 
-  constructor(private _router: Router, private _notificationService: NotificationService) {
+  constructor(private _router: Router, private _notificationService: NotificationService, private _user: UserService) {
     // TODO: Get number of the notification
   }
 }

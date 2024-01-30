@@ -16,11 +16,11 @@
     <!--Expanded navigation-->
     <div class="nav_content expanded hide-scrollbar">
       <mat-accordion multi>
-        <mat-expansion-panel *ngFor="let item of navItems" [hideToggle]="!item.children" [disabled]="!item.children"
-          (opened)="item.isOpen = true" (closed)="item.isOpen = false">
+        <mat-expansion-panel *ngFor="let item of navItems; let idx = index" [hideToggle]="!item.children"
+          [disabled]="!item.children" (opened)="item.isOpen = true" (closed)="item.isOpen = false">
           <mat-expansion-panel-header class="nav_btn">
             <div class="nav_btn-item">
-              <mat-icon>{{item.icon}}</mat-icon> {{item.name}}
+              <mat-icon>{{icons[idx % icons.length]}}</mat-icon> {{item.name}}
             </div>
           </mat-expansion-panel-header>
           <mat-nav-list class="nav_submenu" *ngIf="item.isOpen">
@@ -37,13 +37,13 @@
     <a class="nav_sub-item" matTooltip="{{item.name}}" [matTooltipPosition]="'above'" [matTooltipTouchGestures]="'auto'"
       *ngFor="let item of navItems; let i = index" mat-list-item [matMenuTriggerFor]="item.children? submenu:null"
       (mouseover)="openSubmenu(i, item.children )">
-      <mat-icon>{{item.icon}}</mat-icon>
+      <mat-icon>{{icons[i % icons.length]}}</mat-icon>
     </a>
   </mat-nav-list>
 </div>
 
 <!-- Submenu -->
-<mat-menu class="nav_submenu deep" #submenu="matMenu" style="pointer-events: auto" [hasBackdrop]="true"
+<mat-menu class="nav_submenu deep mini-scrollbar" #submenu="matMenu" style="pointer-events: auto" [hasBackdrop]="true"
   [xPosition]="'after'" [yPosition]="'above'" [overlapTrigger]="true">
   <ng-template matMenuContent>
     <a mat-menu-item class="nav_submenu-item" *ngFor="let item of activeChildNavItems" [routerLink]="item.url">

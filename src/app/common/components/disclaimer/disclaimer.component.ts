@@ -51,17 +51,15 @@ export class DisclaimerComponent {
     return this._isDisclaimerAgreed !== undefined && !this._isDisclaimerAgreed;
   }
 
-  setDisclaimerStatus(val: boolean) {
-    this._isDisclaimerAgreed = val;
+  setDisclaimerStatus(agreed: boolean) {
+    this._isDisclaimerAgreed = agreed;
 
     // If agreed, validate user credentials and redirect to home page
-    if (this._isDisclaimerAgreed) {
-      this._user.userAgreeToDisclaimer(val);
-
+    if (agreed) {
+      this._user.userAgreeToDisclaimer(agreed);
       this.showCard = false;
-
       setTimeout(() => {
-        this._router.navigateByUrl('/');
+        this._router.navigate(['/']);
       }, 800);
     }
   }

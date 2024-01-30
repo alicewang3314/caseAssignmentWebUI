@@ -91,6 +91,20 @@
       }
     }
   }
+
+  /* Unauthorized Page */
+  .unauthorized {
+    background-color: $light-background-light;
+    color: $light-text-accent-deep;
+  }
+
+
+  /* Mini scrollbar */
+  .mini-scrollbar {
+    &::-webkit-scrollbar-thumb {
+      background-color: rgb(91, 91, 91);
+    }
+  }
 }
 
 /*------------ Dark theme----------------*/
@@ -176,6 +190,7 @@
   /* Disclaimer */
   .disclaimer-container {
     background-color: $dark-background;
+
     .disclaimer {
       .disclaimer-warning {
         background-color: $dark-background;
@@ -184,6 +199,19 @@
       .mat-mdc-card-header.disclaimer-header {
         color: $light-text-accent;
       }
+    }
+  }
+
+  /* Unauthorized Page*/
+  .unauthorized {
+    background-color: $dark-background;
+    color: $dark-text;
+  }
+
+  /* Mini scrollbar */
+  .mini-scrollbar {
+    &::-webkit-scrollbar-thumb {
+      background-color: rgb(196, 190, 190);
     }
   }
 }
