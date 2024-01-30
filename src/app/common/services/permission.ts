@@ -1,7 +1,10 @@
 import { inject } from '@angular/core';
 import { UserService } from './user.service';
-import { Router, CanActivateChildFn, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateFn } from '@angular/router';
+import { Router, CanActivateChildFn, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateFn, ActivatedRoute } from '@angular/router';
 
+/**
+ *  Verify if user can access application.
+*/
 export const canActiveUser: CanActivateFn | CanActivateChildFn = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot
@@ -15,8 +18,9 @@ export const canActiveUser: CanActivateFn | CanActivateChildFn = (
   if (!auth.user.loggedIn) {
     router.navigateByUrl('unauthorized');
   } else if (!auth.user.agreedToDisclaimer) {
-    router.navigate(['login'], { skipLocationChange: true });
+    router.navigateByUrl('login');
   }
 
   return false;
 };
+

@@ -5,6 +5,7 @@ import { LoadingService } from '../loading/loading.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { NgIf } from '@angular/common';
+import { UserService } from '../../services/user.service';
 
 export const fadeAnimation = trigger('fadeAnimation', [
   transition(':leave', [
@@ -55,27 +56,17 @@ export class DisclaimerComponent {
 
     // If agreed, validate user credentials and redirect to home page
     if (this._isDisclaimerAgreed) {
-      // TODO: router and user validation logic should put into service
+      this._user.userAgreeToDisclaimer(val);
+
       this.showCard = false;
 
-      // TODO: REMOVE
-      // this._loading.open();
-
-      // give timeout to allow animation
       setTimeout(() => {
-        this._router.navigateByUrl('');
-      }, 1000);
-
-
-
-      // setTimeout(() => {
-      //   this._router.navigateByUrl('');
-      //   this._loading.close()
-      // }, 1000);
+        this._router.navigateByUrl('/');
+      }, 800);
     }
   }
 
   // TODO: remove loading placeholder
-  constructor(private _router: Router, private _loading: LoadingService) {
+  constructor(private _router: Router, private _user: UserService) {
   }
 }

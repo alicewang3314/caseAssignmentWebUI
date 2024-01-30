@@ -30,6 +30,7 @@ import { UserService } from 'src/app/common/services/user.service';
 import { MockInterceptor } from 'src/app/mock.interceptor';
 
 function appInitializer(user: UserService): () => Observable<any> {
+  console.log(`----AppInitializer called----`);
   return () => user.initUser();
 }
 

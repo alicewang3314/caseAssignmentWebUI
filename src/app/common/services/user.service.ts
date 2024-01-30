@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment as env } from 'src/environments/environment';
 import { catchError, tap } from 'rxjs/operators';
-import { Observable, forkJoin, concatMap, of } from 'rxjs';
+import { Observable, forkJoin, concatMap, throwError } from 'rxjs';
 import { USER_DATA, CAPTOR_AUTH_TOKEN, USER_ID } from 'src/app/constant';
+import { Route, Router } from '@angular/router'
 
 const options = {
   headers: new HttpHeaders({
-    'Content-Type': 'applicaation/json'
+    'Content-Type': 'application/json'
   })
 };
 
@@ -30,7 +31,7 @@ export class UserService {
     agreedToDisclaimer: boolean
   } = {
       loggedIn: false,
-      authorizedAcessApp: false,
+      authorizedAcessApp: true, // if user have access to the current application
       agreedToDisclaimer: false
     };
 
@@ -45,22 +46,29 @@ export class UserService {
     const sessionStorageToken = sessionStorage.getItem(CAPTOR_AUTH_TOKEN);
 
     if (sessionStorageToken) {
-      // this._fetchUserPreferenceAndProfile().subscribe({
-      //   next: () => {
-      //     // renew token
-      //     this._winAuth().subscribe();
-      //   },
-      //   error: (err) => {
-      //     console.log(`WinAuth Err: ${JSON.stringify(err)}`);
-      //     //TODO: redirect to unauthorized
-      //   }
-      // });
-      return of([1, 2, 3]);
+      // try to fetech preference
+      const userId = sessionStorage.getItem(USER_ID) || '';
 
+      return this._fetchUserPreference(sessionStorageToken, userId).pipe(
+        catchError((err) => {
+          this._router.navigateByUrl('unauthorized');
+          return throwError(() => err);
+        }),
+        // renew the token
+        concatMap(() => this._winAuth()),
+        concatMap((res) => {
+          // if has a saved valid token, then skip disclaimer
+          this._user.agreedToDisclaimer = true;
+          const { cwopaId, token: { jwtToken } } = res;
+          return this._fetchProfile(jwtToken, cwopaId);
+        }),
+      );
     } else {
       return this._winAuth().pipe(
-        concatMap(() => {
-          const sources$ = [this._fetchProfile, this._fetchUserPreference];
+        tap({ next: () => this._user.loggedIn = true }),
+        concatMap((res: any) => {
+          const { cwopaId, token: { jwtToken } } = res;
+          const sources$ = [this._fetchProfile(jwtToken, cwopaId), this._fetchUserPreference(jwtToken, cwopaId)];
           return forkJoin([sources$]);
         })
       );
@@ -74,29 +82,50 @@ export class UserService {
     sessionStorage.clear();
     this._user = {
       loggedIn: false,
-      authorizedAcessApp: false,
+      authorizedAcessApp: true,
       agreedToDisclaimer: false
     };
   }
 
+  userAgreeToDisclaimer(val: boolean) {
+    this._user.agreedToDisclaimer = val;
+  }
+
   private _winAuth(): Observable<any> {
     return this._http.post(env.URL.AUTH, options).pipe(
-      tap((res: any) => {
-        const { cwopaId, token } = res;
-        sessionStorage.setItem(USER_DATA, JSON.stringify(token));
-        sessionStorage.setItem(CAPTOR_AUTH_TOKEN, token.jwtToken);
-        sessionStorage.setItem(USER_ID, cwopaId);
-        this._user.loggedIn = true;
+      tap({
+        next: (res: any) => {
+          const { cwopaId, token } = res;
+          sessionStorage.setItem(USER_DATA, JSON.stringify(token));
+          sessionStorage.setItem(CAPTOR_AUTH_TOKEN, token.jwtToken);
+          sessionStorage.setItem(USER_ID, cwopaId);
+          this._user.loggedIn = true;
+        },
+        error: err => console.log(err)
       })
     );
   }
 
-  private _fetchProfile(): Observable<any> {
-    return this._http.post(env.URL.PROFILE, options)
+  private _fetchProfile(token: string, userId: string): Observable<any> {
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        [CAPTOR_AUTH_TOKEN]: token
+      })
+    };
+
+    return this._http.post(env.URL.PROFILE, { userId }, options)
   }
 
-  private _fetchUserPreference(): Observable<any> {
-    return this._http.post(env.URL.PREFERENCE, options).pipe(
+  private _fetchUserPreference(token: string, userId: string): Observable<any> {
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        [CAPTOR_AUTH_TOKEN]: token
+      })
+    };
+
+    return this._http.post(env.URL.PREFERENCE, { userId }, options).pipe(
       tap((preference: any) => {
         const { themeCode, employeeEntityID } = preference;
         this._user.preferedTheme = themeCode;
@@ -104,17 +133,6 @@ export class UserService {
       })
     );
   }
-
-  // private _fetchUserPreferenceAndProfile(): Observable<any[]> {
-  //   const preference = this._http.post(env.URL.PREFERENCE, options).pipe(
-  //     tap()
-  //   );
-  //   const profile = this._http.post(env.URL.PROFILE, options);
-
-  //   return forkJoin([profile, preference]).pipe(
-  //     catchError(err => { throw err })
-  //   );
-  // }
 
   private fetchMenu(): Observable<any> {
     return this._http.post(env.URL.MEMU, options);
@@ -124,6 +142,6 @@ export class UserService {
     return this._http.post(env.URL.ACTIVE, options);
   }
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient, private _router: Router) { }
 }
 
