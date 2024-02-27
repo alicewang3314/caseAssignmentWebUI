@@ -18,14 +18,16 @@
       <mat-accordion multi>
         <mat-expansion-panel *ngFor="let item of navItems; let idx = index" [hideToggle]="!item.children"
           [disabled]="!item.children" (opened)="item.isOpen = true" (closed)="item.isOpen = false">
-          <mat-expansion-panel-header class="nav_btn">
+          <mat-expansion-panel-header class="nav_btn" (click)="!item.children && navigate(item.url, item.baseUrl)">
             <div class="nav_btn-item">
               <mat-icon>{{icons[idx % icons.length]}}</mat-icon> {{item.name}}
             </div>
           </mat-expansion-panel-header>
           <mat-nav-list class="nav_submenu" *ngIf="item.isOpen">
             <a class="nav_submenu-item" *ngFor="let child of item.children" mat-list-item
-              [routerLink]="child.url">{{child.name}}</a>
+              (click)="navigate(child.url, item.baseUrl)">
+              {{child.name}}
+            </a>
           </mat-nav-list>
         </mat-expansion-panel>
       </mat-accordion>

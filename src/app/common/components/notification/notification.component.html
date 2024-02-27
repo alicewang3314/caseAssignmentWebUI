@@ -43,15 +43,18 @@
               {{ app | uppercase}}
             </mat-panel-title>
           </mat-expansion-panel-header>
+
+          <!--remove and replace without using angular component -->
           <mat-list>
-            <mat-list-item class="notification_list-item" *ngFor="let item of filterNotificationByApp(app)"
-              (mouseenter)="openDetails(details,item)" (mouseleave)="closeDetails()" #details>
+            <mat-list-item *ngFor="let item of filterNotificationByApp(app)" (mouseenter)="openDetails(details,item)"
+              (mouseleave)="closeDetails()" #details>
               <mat-icon matListItemIcon>description</mat-icon>
               <span matListItemTitle>{{item.subject}}</span>
               <button class="notification_remove-btn" matToolTip="Delete" (click)="removeNotificationById(item.id)">
                 <mat-icon>close</mat-icon>
               </button>
-              <span matListItemLine>Expires in {{getExpiresCountdown(item.queue[0].expirationDueDate)}} days</span>
+              <span matListItemLine class="notification_expiration">Expires in
+                {{getExpiresCountdown(item.queue[0].expirationDueDate)}} days</span>
             </mat-list-item>
           </mat-list>
         </mat-expansion-panel>

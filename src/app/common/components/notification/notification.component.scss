@@ -106,7 +106,7 @@
 
       .mat-mdc-list-item.mdc-list-item.mdc-list-item--with-leading-icon.mdc-list-item--with-three-lines {
         padding: 0px;
-        padding-top: 10px;
+        // padding-top: 10px;
         height: 70px;
       }
 
@@ -124,6 +124,10 @@
         &:hover {
           cursor: pointer;
         }
+      }
+      
+      .notification_expiration {
+        font-weight: 12px;
       }
     }
   }
