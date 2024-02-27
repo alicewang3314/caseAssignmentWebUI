@@ -22,36 +22,36 @@
         <button class="notification_filter-search-btn" matPrefix mat-icon-button>
           <mat-icon color="accent">search</mat-icon>
         </button>
-        <input matInput type="text" [(ngModel)]="filterVal" (ngModelChange)="updateFilter()"
+        <input matInput type="text" [(ngModel)]="filterVal" (ngModelChange)="updateNotification()"
           placeholder="Enter minimum 3 letters">
         <button class="notification_filter-clear-btn" *ngIf="filterVal" matSuffix mat-icon-button
-          (click)="filterVal=''; updateFilter()">
+          (click)="filterVal=''; updateNotification()">
           <mat-icon color="accent">close</mat-icon>
         </button>
       </mat-form-field>
     </div>
     <mat-button-toggle-group class="notification_buttons" appearance="legacy" [(ngModel)]="timeFrame"
-      (ngModelChange)="onSelectedTimeFrameChange()">
+      (ngModelChange)="updateNotification()">
       <mat-button-toggle value="today" [checked]="true">Today</mat-button-toggle>
       <mat-button-toggle value="all">All Notifications</mat-button-toggle>
     </mat-button-toggle-group>
     <div class="notification_content hide-scrollbar">
-      <mat-accordion class="notification_content-panel deep" multi *ngFor="let source of notificationSource">
-        <mat-expansion-panel *ngIf="filterNotificationBySource(source).length > 0">
+      <mat-accordion class="notification_content-panel deep" multi *ngIf="notifications.length > 0 ">
+        <mat-expansion-panel *ngFor="let app of source">
           <mat-expansion-panel-header class="notification_content-header">
             <mat-panel-title>
-              {{source | uppercase}}
+              {{ app | uppercase}}
             </mat-panel-title>
           </mat-expansion-panel-header>
           <mat-list>
-            <mat-list-item class="notification_list-item" *ngFor="let item of filterNotificationBySource(source)"
+            <mat-list-item class="notification_list-item" *ngFor="let item of filterNotificationByApp(app)"
               (mouseenter)="openDetails(details,item)" (mouseleave)="closeDetails()" #details>
               <mat-icon matListItemIcon>description</mat-icon>
-              <span matListItemTitle>{{item.title}}</span>
+              <span matListItemTitle>{{item.subject}}</span>
               <button class="notification_remove-btn" matToolTip="Delete" (click)="removeNotificationById(item.id)">
                 <mat-icon>close</mat-icon>
               </button>
-              <span matListItemLine>Expires in {{getExpiresCountdown(item.expires)}} days</span>
+              <span matListItemLine>Expires in {{getExpiresCountdown(item.queue[0].expirationDueDate)}} days</span>
             </mat-list-item>
           </mat-list>
         </mat-expansion-panel>

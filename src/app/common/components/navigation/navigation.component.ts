@@ -353,11 +353,8 @@ export class NavigationComponent {
   // private _mouseOverMenu?: boolean;
 
   get navItems() {
-    console.log(this._user.memu);
     return this._user.memu;
   }
-
-  private _processNavItem() { }
 
   get activeChildNavItems() {
     return this._activeChildNavItems;
@@ -366,7 +363,7 @@ export class NavigationComponent {
   toggleNavigation() {
     this.isExpanded = !this.isExpanded;
 
-    if (this.isExpanded) {
+    if (this.isExpanded) {//
       setTimeout(() => this.isReady = true, 300);
     } else {
       this.isReady = false;
@@ -374,27 +371,26 @@ export class NavigationComponent {
   }
 
   openSubmenu(idx: number, children?: MenuItem[]) {
-    console.log('open submenu');
     const newTrigger = this.menuTriggers?.toArray()[idx];
-
     // If over same trigger, do nothing
     if (newTrigger === this._activeTrigger) {
       return;
     }
-
     // If over different trigger, close previously opened menu
     if (this._activeTrigger && this._activeTrigger.menuOpened) {
       this._activeTrigger.closeMenu();
     }
-
     this._activeChildNavItems = children;
     this._activeTrigger = newTrigger;
-
     // If has submenu, open it
     if (children) {
       this._activeChildNavItems = children;
       this._activeTrigger?.openMenu();
     }
+  }
+
+  navigate(url: string, baseUrl: string) {
+    console.log(`navigate: baseUrl: ${baseUrl}; url ${url}`);
   }
 
   constructor(private _user: UserService) { }

@@ -4,7 +4,7 @@ import { environment as env } from 'src/environments/environment';
 import { catchError, tap } from 'rxjs/operators';
 import { Observable, forkJoin, concatMap, throwError } from 'rxjs';
 import { USER_DATA, CAPTOR_AUTH_TOKEN, USER_ID, USER_ROLE, USER_BO } from 'src/app/constant';
-import { Route, Router } from '@angular/router'
+import { Router } from '@angular/router'
 
 const options = {
   headers: new HttpHeaders({
@@ -27,8 +27,9 @@ export class UserService {
     location?: string,
     postionId?: string,
     loggedIn: boolean,
-    authorizedAcessApp: boolean
-    agreedToDisclaimer: boolean
+    authorizedAcessApp: boolean,
+    agreedToDisclaimer: boolean,
+
   } = {
       loggedIn: false,
       authorizedAcessApp: true, // if user have access to the current application
@@ -45,6 +46,12 @@ export class UserService {
     return this._menu;
   }
 
+  private _notifications: any[] = [];
+
+  get notifications(): any[] {
+    return this._notifications;
+  }
+
   /**
    * Get user token
    */
@@ -59,7 +66,10 @@ export class UserService {
         // check if the token can access preference
         catchError((err) => {
           this._router.navigate(['/unauthorized']);
-          return throwError(() => err);
+          return throwError(() => {
+            console.error(err);
+            return err;
+          });
         }),
         // get a newer token 
         concatMap(() => this._winAuth()),
@@ -186,7 +196,9 @@ export class UserService {
         [CAPTOR_AUTH_TOKEN]: token
       })
     };
-    return this._http.post(env.URL.ACTIVE, { employeeEntityId }, options);
+    return this._http.post(env.URL.ACTIVE, { employeeEntityId }, options).pipe(
+      tap((res: any) => this._notifications = res)
+    ); 
   }
 
   constructor(private _http: HttpClient, private _router: Router) { }

@@ -30,28 +30,36 @@ export class HeaderComponent {
   MFA_USER_PROFILE_URL = `https://dev.captor.cor.state.pa.us/CAPTORUI/#!/captor/mfa`;
   dateTime = new Date();
 
+  /** Logout user and redirect to unauthorize page **/
   logout() {
     this._user.logout();
     this._router.navigate(['/unauthorized']);
   }
 
+  /** Open other sites by URL **/
   navigate(url: string) {
     window.location.href = url;
   }
 
+  /** Open and close notification panel **/
   toggleNotification() {
     this._notificationService.toggleNotification();
   }
 
+  /** Return if the notification is opened from notification service **/
   get isNotificationOpened() {
     return this._notificationService.isOpened;
   }
 
+  /** Get number of notifications from notification service**/
   get notificationCount() {
-    return this._notificationService.notificationCount;
+    return this._notificationService.notifications.length;
   }
 
-  constructor(private _router: Router, private _notificationService: NotificationService, private _user: UserService) {
-    // TODO: Get number of the notification
+  constructor(
+    private _router: Router,
+    private _notificationService: NotificationService,
+    private _user: UserService
+  ) {
   }
 }

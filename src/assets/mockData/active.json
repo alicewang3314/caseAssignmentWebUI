@@ -20,5 +20,27 @@
         "dismissDate": null
       }
     ]
+  },
+  {
+    "applicationCode": "IMS",
+    "categoryCode": "IMS",
+    "createdBy": 0,
+    "createdDate": "0001-01-01T00:00:00",
+    "id": 8762885,
+    "isDeleted": false,
+    "subject": "Parole Victim Note Added on JAVIER-HERRERA, LEIDYS SID#431-27-70-5",
+    "text": "Note added by Senthur Pandi, Suresh 01/25/2024 11:29 hrs",
+    "queue": [
+      {
+        "createdBy": 55666,
+        "createdDate": "2024-01-25T11:29:13.1445844",
+        "cwopaId": null,
+        "employeeEntityId": 47378,
+        "expirationDueDate": "2024-02-01T11:29:13.1445844",
+        "id": 8560281,
+        "isDeleted": false,
+        "dismissDate": null
+      }
+    ]
   }
 ]

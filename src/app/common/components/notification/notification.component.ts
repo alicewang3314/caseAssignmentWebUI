@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatListItem, MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { PlatformModule, Platform } from '@angular/cdk/platform';
+// import { PlatformModule } from '@angular/cdk/platform'; // eheck if its required for Ipad
 
 @Component({
   selector: 'captor-notification',
@@ -29,66 +29,65 @@ import { PlatformModule, Platform } from '@angular/cdk/platform';
     MatInputModule,
     MatButtonToggleModule,
     MatIconModule,
-    PlatformModule
+    // PlatformModule
   ]
 })
 export class NotificationComponent {
   filterVal: string = '';
   isConfirmClearAll = false;
   timeFrame: 'all' | 'today' = 'today';
-  notifications: any[] = this._getTodayNotifications(this._service.notifications);
+  notifications: any[] = this._getNotifications();
+  source: any[] = this._service.source;
   showNotifications!: boolean;
   private _notificationDetailsRef !: ComponentRef<NotificationDetailsComponent>;
   private _overlayRef !: OverlayRef;
-  private _isMouseOver = false;
+  // private _isMouseOver = false;
 
+  /** Get notification expand status from notification service.**/
   get isOpened() {
     this.showNotifications = this._service.isOpened;
     return this._service.isOpened;
   }
 
+  /** Check if there is any notification for current user ignore timeframe and filter **/
   get hasNotifications() {
-    return this._service.notificationCount > 0;
+    return this._service.notifications.length > 0;
   }
 
-  get notificationSource() {
-    return this._service.sources;
+  /** Filter and return list of notifications for the selected application **/
+  filterNotificationByApp(app: string) {
+    return this.notifications.filter(({ applicationCode }) => app === applicationCode);
   }
 
-  filterNotificationBySource(source: string) {
-    return this.notifications.filter(({ source: _source }) => _source === source);
-  }
-
+  /** Hide confirm clear all button **/
   confirmClearAll() {
     this.isConfirmClearAll = false;
-    this._service.clearAllNotifications(this.timeFrame);
+    this._service.clearAllNotifications();
     this.notifications = this._getNotifications();
   }
 
-  getExpiresCountdown(expires: Date) {
+  /** Calculate the difference between today and expiration **/
+  getExpiresCountdown(expires: any) {
     const today = new Date();
-    const diff = expires.getTime() - today.getTime();
+    const diff = new Date(expires).getTime() - today.getTime();
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
     return days;
   }
 
+  /** Call service to remove a notification by its id Manually close the details opened.**/
   removeNotificationById(id: string) {
     this._service.removeNotification(id);
-    this.notifications = this._getNotifications();
     this.closeDetails();
   }
 
-  updateFilter() {
+  /** Reload notifications when filter or timeframe change **/
+  updateNotification() {
     this.notifications = this._getNotifications();
   }
 
-  onSelectedTimeFrameChange() {
-    this.notifications = this._getNotifications();
-  }
-
-
-  _getNotifications() {
+  /** Helper function getting notification based on currnet filter and selected time frame*/
+  private _getNotifications() {
     let _notifications = this._service.notifications;
 
     if (this.filterVal.length > 2) {
@@ -102,16 +101,20 @@ export class NotificationComponent {
     return _notifications;
   }
 
+  /** A helper function to apply filter to notifications **/
   private _applyFilter(query: string, notifications: any[]) {
-    return notifications.filter((x) => JSON.stringify(x).toLowerCase().indexOf(query) !== -1);
+    return notifications.filter((x) => JSON.stringify(x).toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
 
+
+  /** A helper function to get all notification created today. **/
   private _getTodayNotifications(notifications: any[]) {
     const today = new Date().toDateString();
 
-    return notifications.filter(({ time }) => time.toDateString() === today);
+    return notifications.filter((x: any) => new Date(x.queue[0].createdDate).toDateString() === today);
   }
 
+  /** Arrange notification details component **/
   openDetails(origin: MatListItem, data: any) {
     const positionStrategy = this._overlay.position()
       .flexibleConnectedTo(origin._elementRef.nativeElement)
@@ -124,7 +127,6 @@ export class NotificationComponent {
       .withFlexibleDimensions(false)
       .withPush(true);
 
-
     const config = new OverlayConfig({
       positionStrategy,
       width: '300px',
@@ -132,30 +134,32 @@ export class NotificationComponent {
       scrollStrategy: this._overlay.scrollStrategies.close()
     });
 
-    // do i need overlay ref
+    // TODO: do i need overlay ref??
     this._overlayRef = this._overlay.create(config);
     const detailsComponent = new ComponentPortal(NotificationDetailsComponent);
     const detailsComponentRef = this._overlayRef.attach(detailsComponent);
 
-    // provide input
-    detailsComponentRef.instance.header = data.title;
-    detailsComponentRef.instance.content = data.content;
-    detailsComponentRef.instance.createdDate = data.time;
-    detailsComponentRef.instance.expiryDate = data.expires;
+    // Pass proptery to details component
+    detailsComponentRef.instance.header = data.subject;
+    detailsComponentRef.instance.content = data.text;
+    detailsComponentRef.instance.createdDate = data.queue[0].createdDate;
+    detailsComponentRef.instance.expiryDate = data.queue[0].expirationDueDate;
 
     this._notificationDetailsRef = detailsComponentRef;
-    this._isMouseOver = true;
+    // this._isMouseOver = true;
   }
 
+  /** Cloase notification details and dispose overlay **/
   closeDetails() {
-    this._isMouseOver = false;
+    // this._isMouseOver = false;
 
     if (this._notificationDetailsRef && this._overlayRef) {
       this._overlayRef.dispose();
     }
   }
 
-  constructor(private _service: NotificationService,
+  constructor(
+    private _service: NotificationService,
     private _overlay: Overlay
   ) { }
 }
