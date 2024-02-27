@@ -33,22 +33,21 @@
       </mat-accordion>
     </div>
   </ng-container>
-
   <!-- Collapsed navigation-->
   <mat-nav-list *ngIf="!isExpanded" class="nav_content collapsed hide-scrollbar" [@listAnimation]="navItems.length">
     <a class="nav_sub-item" matTooltip="{{item.name}}" [matTooltipPosition]="'above'" [matTooltipTouchGestures]="'auto'"
       *ngFor="let item of navItems; let i = index" mat-list-item [matMenuTriggerFor]="item.children? submenu:null"
-      (mouseover)="openSubmenu(i, item.children )">
+      (mouseover)="openSubmenu(i, item.children )" (click)="!item.children && navigate(item.url, item.baseUrl)">
       <mat-icon>{{icons[i % icons.length]}}</mat-icon>
     </a>
   </mat-nav-list>
 </div>
-
 <!-- Submenu -->
 <mat-menu class="nav_submenu deep mini-scrollbar" #submenu="matMenu" style="pointer-events: auto" [hasBackdrop]="true"
   [xPosition]="'after'" [yPosition]="'above'" [overlapTrigger]="true">
   <ng-template matMenuContent>
-    <a mat-menu-item class="nav_submenu-item" *ngFor="let item of activeChildNavItems" [routerLink]="item.url">
+    <a mat-menu-item class="nav_submenu-item" *ngFor="let item of activeChildNavItems"
+      (click)="navigate(item.url, item.baseUrl)">
       {{item.name}}
     </a>
   </ng-template>

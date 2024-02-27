@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
   useMock: true,
+  baseUrl: 'https://dev.captor.cor.state.pa.us/',
   URL: {
     AUTH: 'assets/mockData/token.json',
     PREFERENCE: 'assets/mockData/preferences.json',

@@ -10,6 +10,7 @@ import { RouterModule, Router } from '@angular/router';
 import { NgIf, NgFor } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { UserService } from '../../services/user.service';
+import { environment as env } from 'src/environments/environment';
 
 export type MenuItem = {
   name: string;
@@ -121,11 +122,16 @@ export class NavigationComponent {
     }
   }
 
-  /** Navigate to other captor navigation **/
-  navigate(url: string, baseUrl: string = '') {
-    const captorBaseUrl = 'https://dev.captor.cor.state.pa.us/';
-    const path = `${captorBaseUrl}${baseUrl}/#!/${url}`;
-    window.location.href = path;
+  /** Navigate to other captor application or navigate within current app **/
+  navigate(url: string = '', appBaseUrl: string = '') {
+    const fullUrl = window.location.href;
+
+    if (fullUrl.indexOf(appBaseUrl) == -1) {
+      const path = `${env.baseUrl}${appBaseUrl}/#!/${url}`;
+      window.location.href = path;
+    } else {
+      this._router.navigate([url]);
+    }
   }
 
   constructor(private _user: UserService, private _router: Router) { }

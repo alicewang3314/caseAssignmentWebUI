@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
   useMock: false,
+  baseUrl: 'https://dev.captor.cor.state.pa.us/',
   URL: {
     AUTH: 'https://dev.captor.cor.state.pa.us/IWAUserAPI/WinAuth/UserAndToken',
     PREFERENCE: 'https://dev.captorapi.cor.state.pa.us/authAPI/user/V2/Preferences',
