@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { UserService } from './user.service';
-import { Router, CanActivateChildFn, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateFn, ActivatedRoute } from '@angular/router';
+import { Router, CanActivateChildFn, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateFn } from '@angular/router';
+import { environment as env} from 'src/environments/environment';
 
 /**
  *  Verify if user can access application.
@@ -10,15 +11,13 @@ export const canActiveUser: CanActivateFn | CanActivateChildFn = (
   state: RouterStateSnapshot
 ) => {
   const auth = inject(UserService);
-  const router = inject(Router);
-  const canActiveApp = auth.user.loggedIn && auth.user.authorizedAcessApp && auth.user.agreedToDisclaimer;
+  const canActiveApp = auth.user.loggedIn && auth.user.authorizedAcessApp;
 
   if (canActiveApp) return true;
 
   if (!auth.user.loggedIn) {
-    router.navigate(['/unauthorized']);
-  } else if (!auth.user.agreedToDisclaimer) {
-    router.navigate(['/login']);
+    const unauthorizedUrl = `${env.baseUrl}/#!/captor/unauthorized`;
+    window.location.href = unauthorizedUrl;
   }
 
   return false;

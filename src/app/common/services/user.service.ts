@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment as env } from 'src/environments/environment';
 import { catchError, tap } from 'rxjs/operators';
-import { Observable, forkJoin, concatMap, throwError } from 'rxjs';
-import { USER_DATA, CAPTOR_AUTH_TOKEN, USER_ID, USER_ROLE, USER_BO } from 'src/app/constant';
-import { Router } from '@angular/router'
+import { Observable, concatMap, throwError, of } from 'rxjs';
+import { USER_DATA, CAPTOR_AUTH_TOKEN, USER_ID, USER_BO, MOCK_TOKEN } from 'src/app/constant';
+import { Router } from '@angular/router';
 
 const options = {
   headers: new HttpHeaders({
@@ -28,12 +28,9 @@ export class UserService {
     postionId?: string,
     loggedIn: boolean,
     authorizedAcessApp: boolean,
-    agreedToDisclaimer: boolean,
-
   } = {
-      loggedIn: false,
-      authorizedAcessApp: true, // if user have access to the current application
-      agreedToDisclaimer: false
+      loggedIn: true,
+      authorizedAcessApp: true // if user have access to the current application
     };
 
   get user() {
@@ -53,38 +50,42 @@ export class UserService {
   }
 
   /**
-   * Get user token
+   * Get user token and information from session storage
    */
   initUser(): Observable<any> {
-    const sessionStorageToken = sessionStorage.getItem(CAPTOR_AUTH_TOKEN);
+    const sessionStorageToken = env.useMock
+      ? MOCK_TOKEN
+      : sessionStorage.getItem(CAPTOR_AUTH_TOKEN);
+    const userId = sessionStorage.getItem(USER_ID) || '';
+    const unauthorizedUrl = `${env.baseUrl}/#!/captor/unauthorized`;
 
     if (sessionStorageToken) {
       // try to fetech preference
-      const userId = sessionStorage.getItem(USER_ID) || '';
-
       return this._fetchUserPreferenceAndNotification(sessionStorageToken, userId).pipe(
+        tap(_ => this._user.loggedIn = true),
         // check if the token can access preference
         catchError((err) => {
-          this._router.navigate(['/unauthorized']);
+          // window.location.href = unauthorizedUrl;
+
           return throwError(() => {
             console.error(err);
             return err;
           });
         }),
-        // get a newer token 
+        // Refresh token
         concatMap(() => this._winAuth()),
-        concatMap((res) => {// if the saved token valid, dont need to show the disclaimer
-          this._user.agreedToDisclaimer = true;
+        concatMap((res) => {// if the saved token valid,
           const { cwopaId, token: { jwtToken } } = res;
-          const calls$ = [this._fetchProfile(jwtToken, cwopaId), this._fetchMenu(jwtToken, cwopaId)];
-          return forkJoin(calls$);
+          return this._fetchMenu(jwtToken);
         })
       );
     } else {
-      return this._winAuth();
+      // redirect to captor if no token found
+
+      // window.location.href = unauthorizedUrl;
+      return of({});
     }
   }
-
 
   /**
    * Logout. Clear session and reset user
@@ -93,32 +94,21 @@ export class UserService {
     sessionStorage.clear();
     this._user = {
       loggedIn: false,
-      authorizedAcessApp: true,
-      agreedToDisclaimer: false
+      authorizedAcessApp: true
     };
     this._menu = [];
   }
 
-
-  userAgreeToDisclaimer(val: boolean) {
-    this._user.agreedToDisclaimer = val;
-    // if user agree to disclaimer, load profile, reference, menu, and active
-    const calls$ = [
-      this._fetchUserPreferenceAndNotification(this._user.token || '', this._user.userId || ''),
-      this._fetchProfile(this._user.token || '', this._user.userId || ''),
-      this._fetchMenu(this._user.token || '', this._user.userId || '')
-    ];
-    forkJoin(calls$).subscribe();
-  }
-
+  /**
+   * A helper function to refresh user token
+   */
   private _winAuth(): Observable<any> {
     return this._http.post(env.URL.AUTH, options).pipe(
       tap({
         next: (res: any) => {
-          const { cwopaId, token } = res;
+          const { token } = res;
           sessionStorage.setItem(USER_DATA, JSON.stringify(token));
           sessionStorage.setItem(CAPTOR_AUTH_TOKEN, token.jwtToken);
-          sessionStorage.setItem(USER_ID, cwopaId);
           this._user.loggedIn = true;
         },
         error: err => console.log(err)
@@ -126,26 +116,30 @@ export class UserService {
     );
   }
 
-  private _fetchProfile(token: string, userId: string): Observable<any> {
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        [CAPTOR_AUTH_TOKEN]: token
-      })
-    };
+  // // TODO: REMOVE
+  // private _fetchProfile(token: string, userId: string): Observable<any> {
+  //   const options = {
+  //     headers: new HttpHeaders({
+  //       'Content-Type': 'application/json',
+  //       [CAPTOR_AUTH_TOKEN]: token
+  //     })
+  //   };
 
-    console.log('fetching profile');
-    return this._http.post(env.URL.PROFILE, { userId }, options).pipe(
-      tap({
-        next: (res: any) => {
-          const { userBO, roleBOList } = res;
-          sessionStorage.setItem(USER_ROLE, JSON.stringify(roleBOList));
-          sessionStorage.setItem(USER_BO, JSON.stringify(userBO));
-        }
-      })
-    );
-  }
+  //   console.log('fetching profile');
+  //   return this._http.post(env.URL.PROFILE, { userId }, options).pipe(
+  //     tap({
+  //       next: (res: any) => {
+  //         const { userBO, roleBOList } = res;
+  //         sessionStorage.setItem(USER_ROLE, JSON.stringify(roleBOList));
+  //         sessionStorage.setItem(USER_BO, JSON.stringify(userBO));
+  //       }
+  //     })
+  //   );
+  // }
 
+  /**
+   * Helper function to get and save user preference
+   */
   private _fetchUserPreferenceAndNotification(token: string, userId: string): Observable<any> {
     const options = {
       headers: new HttpHeaders({
@@ -161,17 +155,15 @@ export class UserService {
         const { themeCode, employeeEntityID } = preference;
         this._user.preferedTheme = themeCode;
         this._user.employeeEntityID = employeeEntityID;
-      }),
-      // If succuessfully fetch preference, fetch notification
-      // Fetch notification will use the employeeEntityID from preference
-      concatMap((res: any) => {
-        const { employeeEntityID } = res;
-        return this._fetchNotification(token || '', employeeEntityID);
       })
     );
   }
 
-  private _fetchMenu(token: string, UserId: string): Observable<any> {
+  /**
+   * Helper function to fetch and save menu
+  */
+  private _fetchMenu(token: string): Observable<any> {
+    const { employeeEntityId } = JSON.parse(sessionStorage.getItem(USER_BO) || '{}');
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -181,7 +173,7 @@ export class UserService {
 
     console.log('fetching menu');
 
-    return this._http.post(env.URL.MEMU, { UserId }, options).pipe(
+    return this._http.post(env.URL.MEMU, { UserId: employeeEntityId || '' }, options).pipe(
       tap((res: any) => {
         const { menuItems } = res;
         this._menu = menuItems;
@@ -189,6 +181,9 @@ export class UserService {
     );
   }
 
+  /**
+   * Helper function to fetch and save notifications
+  */
   private _fetchNotification(token: string, employeeEntityId: string): Observable<any> {
     const options = {
       headers: new HttpHeaders({
@@ -198,7 +193,7 @@ export class UserService {
     };
     return this._http.post(env.URL.ACTIVE, { employeeEntityId }, options).pipe(
       tap((res: any) => this._notifications = res)
-    ); 
+    );
   }
 
   constructor(private _http: HttpClient, private _router: Router) { }

@@ -7,7 +7,6 @@ import { CreateStaff } from './createStaff/createStaff';
 import { ViewUnitManagerAssignment } from './viewUnitManagerAssignment/viewUnitManagerAssignment';
 import { CreateBulkAssignment } from './createBulkAssignment/createBulkAssignment';
 import { EditUnit } from './editUnit/editUnit';
-import { UnauthorizedComponent, DisclaimerComponent } from './common'
 import { canActiveUser } from './common/services/permission';
 
 const routes: Routes = [
@@ -25,12 +24,6 @@ const routes: Routes = [
     ],
     canActivate: [canActiveUser],
     canActivateChild: [canActiveUser]
-  }, {
-    path: 'unauthorized',
-    component: UnauthorizedComponent
-  }, {
-    path: 'login',
-    component: DisclaimerComponent
   }, {
     path: '**',
     redirectTo: ''

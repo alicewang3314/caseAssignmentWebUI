@@ -122,11 +122,13 @@ export class NavigationComponent {
     }
   }
 
-  /** Navigate to other captor application or navigate within current app **/
+  /** 
+   * Navigate to other captor application or navigate within current app
+   */
   navigate(url: string = '', appBaseUrl: string = '') {
-    const fullUrl = window.location.href;
+    const currentUrl = window.location.href;
 
-    if (fullUrl.indexOf(appBaseUrl) == -1) {
+    if (currentUrl.indexOf(appBaseUrl) == -1) {
       const path = `${env.baseUrl}${appBaseUrl}/#!/${url}`;
       window.location.href = path;
     } else {
