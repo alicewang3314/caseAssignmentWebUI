@@ -33,7 +33,7 @@ export class HeaderComponent {
   /** Logout user and redirect to unauthorize page **/
   logout() {
     this._user.logout();
-    this._router.navigate(['/unauthorized']);
+    // this._router.navigate(['/unauthorized']);
   }
 
   /** Open other sites by URL **/

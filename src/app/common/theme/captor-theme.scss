@@ -92,13 +92,6 @@
     }
   }
 
-  /* Unauthorized Page */
-  .unauthorized {
-    background-color: $light-background-light;
-    color: $light-text-accent-deep;
-  }
-
-
   /* Mini scrollbar */
   .mini-scrollbar {
     &::-webkit-scrollbar-thumb {
@@ -132,9 +125,14 @@
         color: $dark-text;
       }
 
-      .notification_list-item {
-        background-color: $dark-background-light !important;
-        color: $dark-text !important;
+      .mat-expansion-panel-body {
+        background-color: $dark-background-deep;
+        color: $dark-text;
+      }
+
+      .mat-mdc-list.mat-mdc-list-base.mdc-list .mat-mdc-list-item.mdc-list-item {
+        background-color: $dark-background-deep;
+        color: $dark-text;
       }
     }
   }
@@ -200,12 +198,6 @@
         color: $light-text-accent;
       }
     }
-  }
-
-  /* Unauthorized Page*/
-  .unauthorized {
-    background-color: $dark-background;
-    color: $dark-text;
   }
 
   /* Mini scrollbar */

@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment as env } from 'src/environments/environment';
 import { catchError, tap } from 'rxjs/operators';
-import { Observable, concatMap, throwError, of } from 'rxjs';
+import { Observable, concatMap, throwError, of, forkJoin } from 'rxjs';
 import { USER_DATA, CAPTOR_AUTH_TOKEN, USER_ID, USER_BO, MOCK_TOKEN } from 'src/app/constant';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+// import { distinctUntilKeyChanged } from 'rxjs/operators';
 
 const options = {
   headers: new HttpHeaders({
@@ -16,7 +18,7 @@ const options = {
   providedIn: 'root'
 })
 export class UserService {
-  private _user: {
+  private user: BehaviorSubject<{
     userId?: string,
     employeeEntityID?: string,
     token?: string,
@@ -26,16 +28,23 @@ export class UserService {
     lastName?: string,
     location?: string,
     postionId?: string,
-    loggedIn: boolean,
-    authorizedAcessApp: boolean,
-  } = {
-      loggedIn: true,
-      authorizedAcessApp: true // if user have access to the current application
-    };
+    loggedIn: boolean
+  }> = new BehaviorSubject<{
+    userId?: string,
+    employeeEntityID?: string,
+    token?: string,
+    preferedTheme?: string,
+    firstName?: string,
+    middleName?: string,
+    lastName?: string,
+    location?: string,
+    postionId?: string,
+    loggedIn: boolean
+  }>({
+    loggedIn: true
+  });
 
-  get user() {
-    return this._user;
-  }
+  user$ = this.user.asObservable();
 
   private _menu: any[] = []
 
@@ -56,34 +65,40 @@ export class UserService {
     const sessionStorageToken = env.useMock
       ? MOCK_TOKEN
       : sessionStorage.getItem(CAPTOR_AUTH_TOKEN);
-    const userId = sessionStorage.getItem(USER_ID) || '';
-    const unauthorizedUrl = `${env.baseUrl}/#!/captor/unauthorized`;
+
 
     if (sessionStorageToken) {
       // try to fetech preference
-      return this._fetchUserPreferenceAndNotification(sessionStorageToken, userId).pipe(
-        tap(_ => this._user.loggedIn = true),
-        // check if the token can access preference
+      return this._fetchUserPreference(sessionStorageToken).pipe(
+        tap(_ => {
+          const state = this.user.getValue();
+          state.loggedIn = true;
+          this.user.next(state);
+        }),
         catchError((err) => {
-          // window.location.href = unauthorizedUrl;
+          const state = this.user.getValue();
+          state.loggedIn = false;
+          this.user.next(state);
 
           return throwError(() => {
-            console.error(err);
             return err;
           });
         }),
         // Refresh token
         concatMap(() => this._winAuth()),
-        concatMap((res) => {// if the saved token valid,
-          const { cwopaId, token: { jwtToken } } = res;
-          return this._fetchMenu(jwtToken);
+        concatMap((res) => {
+          const { token: { jwtToken } } = res;
+          const { employeeEntityId } = JSON.parse(sessionStorage.getItem(USER_BO) || '{}');
+          const calls$ = [this._fetchMenu(jwtToken, employeeEntityId), this._fetchNotification(jwtToken, employeeEntityId)];
+
+          return forkJoin(calls$);
         })
       );
     } else {
-      // redirect to captor if no token found
-
-      // window.location.href = unauthorizedUrl;
-      return of({});
+      const state = this.user.getValue();
+      state.loggedIn = false;
+      this.user.next(state);
+      return of();
     }
   }
 
@@ -91,12 +106,10 @@ export class UserService {
    * Logout. Clear session and reset user
    */
   logout() {
-    sessionStorage.clear();
-    this._user = {
-      loggedIn: false,
-      authorizedAcessApp: true
-    };
-    this._menu = [];
+    sessionStorage.clear(); // do I need to clear?
+    const lastValue = this.user.getValue();
+    lastValue.loggedIn = false;
+    this.user.next(lastValue);
   }
 
   /**
@@ -109,38 +122,16 @@ export class UserService {
           const { token } = res;
           sessionStorage.setItem(USER_DATA, JSON.stringify(token));
           sessionStorage.setItem(CAPTOR_AUTH_TOKEN, token.jwtToken);
-          this._user.loggedIn = true;
-        },
-        error: err => console.log(err)
+        }
       })
     );
   }
 
-  // // TODO: REMOVE
-  // private _fetchProfile(token: string, userId: string): Observable<any> {
-  //   const options = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       [CAPTOR_AUTH_TOKEN]: token
-  //     })
-  //   };
-
-  //   console.log('fetching profile');
-  //   return this._http.post(env.URL.PROFILE, { userId }, options).pipe(
-  //     tap({
-  //       next: (res: any) => {
-  //         const { userBO, roleBOList } = res;
-  //         sessionStorage.setItem(USER_ROLE, JSON.stringify(roleBOList));
-  //         sessionStorage.setItem(USER_BO, JSON.stringify(userBO));
-  //       }
-  //     })
-  //   );
-  // }
-
   /**
    * Helper function to get and save user preference
    */
-  private _fetchUserPreferenceAndNotification(token: string, userId: string): Observable<any> {
+  private _fetchUserPreference(token: string): Observable<any> {
+    const userId = sessionStorage.getItem(USER_ID) || '';
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -148,13 +139,13 @@ export class UserService {
       })
     };
 
-    console.log('fetching preference');
-
     return this._http.post(env.URL.PREFERENCE, { userId }, options).pipe(
       tap((preference: any) => {
         const { themeCode, employeeEntityID } = preference;
-        this._user.preferedTheme = themeCode;
-        this._user.employeeEntityID = employeeEntityID;
+        const state = this.user.getValue();
+        state.preferedTheme = themeCode;
+        state.employeeEntityID = employeeEntityID;
+        this.user.next(state);
       })
     );
   }
@@ -162,8 +153,8 @@ export class UserService {
   /**
    * Helper function to fetch and save menu
   */
-  private _fetchMenu(token: string): Observable<any> {
-    const { employeeEntityId } = JSON.parse(sessionStorage.getItem(USER_BO) || '{}');
+  private _fetchMenu(token: string, employeeEntityId: string): Observable<any> {
+
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -196,6 +187,8 @@ export class UserService {
     );
   }
 
-  constructor(private _http: HttpClient, private _router: Router) { }
+  constructor(private _http: HttpClient, private _router: Router) {
+    this.user$.subscribe(val => console.log(`is user logged in ${JSON.stringify(val)}`))
+  }
 }
 
