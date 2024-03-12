@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe, NgIf, AsyncPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { Router } from '@angular/router';
 import { NotificationService } from '../notification/notification.service';
 import { MatBadgeModule } from '@angular/material/badge';
 import { CaptorThemeSwitchComponent } from '../../theme';
 import { MatButtonModule } from '@angular/material/button';
-import { UserService } from '../../services/user.service'
+import { UserService } from '../../services/user.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'captor-header',
@@ -17,6 +17,7 @@ import { UserService } from '../../services/user.service'
   imports: [
     DatePipe,
     NgIf,
+    AsyncPipe,
     MatBadgeModule,
     MatButtonModule,
     MatMenuModule,
@@ -29,11 +30,11 @@ export class HeaderComponent {
   DOC_INFO_URL = `https://dev.web.cor.state.pa.us/DOCInfo/Login.aspx`;
   MFA_USER_PROFILE_URL = `https://dev.captor.cor.state.pa.us/CAPTORUI/#!/captor/mfa`;
   dateTime = new Date();
+  userName$ = this._user.user$.pipe(map(({ userId }) => userId));
 
   /** Logout user and redirect to unauthorize page **/
   logout() {
     this._user.logout();
-    // this._router.navigate(['/unauthorized']);
   }
 
   /** Open other sites by URL **/
@@ -57,7 +58,6 @@ export class HeaderComponent {
   }
 
   constructor(
-    private _router: Router,
     private _notificationService: NotificationService,
     private _user: UserService
   ) {

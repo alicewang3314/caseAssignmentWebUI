@@ -3,44 +3,30 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment as env } from 'src/environments/environment';
 import { catchError, tap } from 'rxjs/operators';
 import { Observable, concatMap, throwError, of, forkJoin } from 'rxjs';
-import { USER_DATA, CAPTOR_AUTH_TOKEN, USER_ID, USER_BO, MOCK_TOKEN } from 'src/app/constant';
+import { USER_DATA, CAPTOR_AUTH_TOKEN, USER_ID, USER_BO, MOCK_TOKEN, THEME } from 'src/app/constant';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-// import { distinctUntilKeyChanged } from 'rxjs/operators';
 
-const options = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json'
-  })
-};
+interface UserState {
+  userId?: string,
+  employeeEntityID?: string,
+  employeeId?: string,
+  token?: string,
+  firstName?: string,
+  middleName?: string,
+  lastName?: string,
+  location?: string,
+  postionId?: string,
+  preferedTheme?: string,
+  loggedIn: boolean
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private user: BehaviorSubject<{
-    userId?: string,
-    employeeEntityID?: string,
-    token?: string,
-    preferedTheme?: string,
-    firstName?: string,
-    middleName?: string,
-    lastName?: string,
-    location?: string,
-    postionId?: string,
-    loggedIn: boolean
-  }> = new BehaviorSubject<{
-    userId?: string,
-    employeeEntityID?: string,
-    token?: string,
-    preferedTheme?: string,
-    firstName?: string,
-    middleName?: string,
-    lastName?: string,
-    location?: string,
-    postionId?: string,
-    loggedIn: boolean
-  }>({
+  private user: BehaviorSubject<UserState> = new BehaviorSubject<UserState>({
+    userId: 'c-junwang',
     loggedIn: true
   });
 
@@ -65,7 +51,7 @@ export class UserService {
     const sessionStorageToken = env.useMock
       ? MOCK_TOKEN
       : sessionStorage.getItem(CAPTOR_AUTH_TOKEN);
-
+    const userId = sessionStorage.getItem(USER_ID);
 
     if (sessionStorageToken) {
       // try to fetech preference
@@ -116,6 +102,11 @@ export class UserService {
    * A helper function to refresh user token
    */
   private _winAuth(): Observable<any> {
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
     return this._http.post(env.URL.AUTH, options).pipe(
       tap({
         next: (res: any) => {
@@ -152,7 +143,7 @@ export class UserService {
 
   /**
    * Helper function to fetch and save menu
-  */
+   */
   private _fetchMenu(token: string, employeeEntityId: string): Observable<any> {
 
     const options = {
@@ -174,7 +165,7 @@ export class UserService {
 
   /**
    * Helper function to fetch and save notifications
-  */
+   */
   private _fetchNotification(token: string, employeeEntityId: string): Observable<any> {
     const options = {
       headers: new HttpHeaders({
@@ -185,6 +176,46 @@ export class UserService {
     return this._http.post(env.URL.ACTIVE, { employeeEntityId }, options).pipe(
       tap((res: any) => this._notifications = res)
     );
+  }
+
+  /**
+   * A helper function to get user information for session storage
+   */
+  private _getUserFromSession() {
+    const token = sessionStorage.getItem(CAPTOR_AUTH_TOKEN) || '';
+    const userId = sessionStorage.getItem(USER_ID) || '';
+    const {
+      employeeEntityId,
+      employeeId,
+      firstName,
+      lastName,
+      middleName,
+      locationName,
+      position
+    } = JSON.parse(sessionStorage.getItem(USER_BO) || '{}');
+    const preferedTheme = sessionStorage.getItem(THEME) || 'LIGHT';
+
+    const state = this.user.getValue();
+    this.user.next({
+      ...state,
+      userId,
+      employeeEntityID: employeeEntityId,
+      token,
+      firstName,
+      middleName,
+      lastName,
+      location: locationName,
+      postionId: position,
+      employeeId,
+      preferedTheme
+    });
+  }
+
+  /**
+   * A helper function to save user information in sessionstorage for the local environment
+   */
+  private setMockUserInSession() {
+
   }
 
   constructor(private _http: HttpClient, private _router: Router) {
