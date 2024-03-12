@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment as env } from 'src/environments/environment';
-import { catchError, tap } from 'rxjs/operators';
-import { Observable, concatMap, throwError, of, forkJoin } from 'rxjs';
-import { USER_DATA, CAPTOR_AUTH_TOKEN, USER_ID, USER_BO, MOCK_TOKEN, THEME } from 'src/app/constant';
+import { catchError, tap, distinctUntilKeyChanged, map } from 'rxjs/operators';
+import { Observable, concatMap, throwError, of, forkJoin, BehaviorSubject } from 'rxjs';
+import { USER_DATA, CAPTOR_AUTH_TOKEN, USER_ID, USER_BO, THEME, MOCK_TOKEN } from 'src/app/constant';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
 
 interface UserState {
   userId?: string,
@@ -48,23 +47,27 @@ export class UserService {
    * Get user token and information from session storage
    */
   initUser(): Observable<any> {
-    const sessionStorageToken = env.useMock
-      ? MOCK_TOKEN
-      : sessionStorage.getItem(CAPTOR_AUTH_TOKEN);
-    const userId = sessionStorage.getItem(USER_ID);
+    // If local environment, manually save info to 
+    if (env.useMock) {
+      this._setMockUserInSession();
+    }
 
-    if (sessionStorageToken) {
-      // try to fetech preference
-      return this._fetchUserPreference(sessionStorageToken).pipe(
+    const userState = this._getUserFromSession();
+    const { token, employeeEntityID = '' } = userState;
+
+    console.log('token', token);
+
+    if (token) {
+      // try to fetech preference with token
+      return this._fetchUserPreference(token).pipe(
         tap(_ => {
           const state = this.user.getValue();
-          state.loggedIn = true;
           this.user.next(state);
         }),
         catchError((err) => {
           const state = this.user.getValue();
           state.loggedIn = false;
-          this.user.next(state);
+          this.user.next(state)
 
           return throwError(() => {
             return err;
@@ -74,8 +77,8 @@ export class UserService {
         concatMap(() => this._winAuth()),
         concatMap((res) => {
           const { token: { jwtToken } } = res;
-          const { employeeEntityId } = JSON.parse(sessionStorage.getItem(USER_BO) || '{}');
-          const calls$ = [this._fetchMenu(jwtToken, employeeEntityId), this._fetchNotification(jwtToken, employeeEntityId)];
+          // const { employeeEntityId } = JSON.parse(sessionStorage.getItem(USER_BO) || '{}');
+          const calls$ = [this._fetchMenu(jwtToken, employeeEntityID), this._fetchNotification(jwtToken, employeeEntityID)];
 
           return forkJoin(calls$);
         })
@@ -181,7 +184,7 @@ export class UserService {
   /**
    * A helper function to get user information for session storage
    */
-  private _getUserFromSession() {
+  private _getUserFromSession(): UserState {
     const token = sessionStorage.getItem(CAPTOR_AUTH_TOKEN) || '';
     const userId = sessionStorage.getItem(USER_ID) || '';
     const {
@@ -196,7 +199,7 @@ export class UserService {
     const preferedTheme = sessionStorage.getItem(THEME) || 'LIGHT';
 
     const state = this.user.getValue();
-    this.user.next({
+    const nextState = {
       ...state,
       userId,
       employeeEntityID: employeeEntityId,
@@ -208,18 +211,26 @@ export class UserService {
       postionId: position,
       employeeId,
       preferedTheme
-    });
+    };
+    this.user.next(nextState);
+
+    return nextState;
   }
 
   /**
    * A helper function to save user information in sessionstorage for the local environment
    */
-  private setMockUserInSession() {
-
+  private _setMockUserInSession() {
+    sessionStorage.setItem(THEME, 'LIGHT');
+    sessionStorage.setItem(CAPTOR_AUTH_TOKEN, MOCK_TOKEN);
+    sessionStorage.setItem(USER_ID, 'c-username');
   }
 
   constructor(private _http: HttpClient, private _router: Router) {
-    this.user$.subscribe(val => console.log(`is user logged in ${JSON.stringify(val)}`))
+    this.user$.pipe(
+      distinctUntilKeyChanged('loggedIn'),
+      map(({ loggedIn }) => loggedIn)
+    ).subscribe(isLoggedIn => !isLoggedIn && this._router.navigateByUrl('unauthorized'));
   }
 }
 
